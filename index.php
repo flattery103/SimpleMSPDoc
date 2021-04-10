@@ -29,15 +29,16 @@
 
 </head>
 <body>
+
     <img class="logo" src='MSPDoc.png'>
-
-
     <nav class="navbar">
-        <ul class="navbar-list">
+        <ul class="navbar-list" id="navbar-list">
           <li class="navbar-item"><a class="navbar-link" href="#intro">Dashboard</a></li>
           <li class="navbar-item"><a class="navbar-link" href="#intro">Companies</a></li>
           <li class="navbar-item"><a class="navbar-link" href="#intro">Knowledge</a></li>
 	</ul>
+<a id="navicon" class="navicon" href="javascript:void(0);" onclick="myFunction()">&#9776;</a>
+
    </nav>
 
 
@@ -46,7 +47,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="one-half column" style="margin-top: 25%">
+      <div class="one-half column">
         <h4>Basic Page</h4>
         <p>This index.html page is a placeholder with the CSS, font and favicon. It's just waiting for you to add some content! If you need some help hit up the <a href="http://www.getskeleton.com">Skeleton documentation</a>.</p>
       </div>
@@ -55,5 +56,16 @@
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+<script>
+function myFunction() {
+  var x = document.getElementById("navbar-list");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+</script>
 </body>
 </html>
