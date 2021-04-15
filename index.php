@@ -36,12 +36,14 @@
     <img class="logo" src='MSPDoc.png'>
     <nav class="navbar">
         <ul class="navbar-list" id="navbar-list">
-          <li class="navbar-item"><a class="navbar-link" href="#intro">Dashboard</a></li>
-          <li class="navbar-item"><a class="navbar-link" href="#intro">Companies</a></li>
-          <li class="navbar-item"><a class="navbar-link" href="#intro">Knowledge</a></li>
-          <li class="navbar-item" style="top:15px;"><input type="text" placeholder="Search" name="search"><input class="button-primary" type="submit" value="Go"></li>
+          <li class="navbar-item"><a class="navbar-link" href="index.php">Dashboard</a></li>
+          <li class="navbar-item"><a class="navbar-link" href="index.php?p=companies">Companies</a></li>
+          <li class="navbar-item"><a class="navbar-link" href="index.php?p=knowledge">Knowledge</a></li>
+          <li class="navbar-item"><a class="navbar-link" href="index.php?p=links">Links</a></li>
+          <li class="navbar-item search-bar" style="top:15px;"><input type="text" placeholder="Search" name="search"><input class="button-primary" type="submit" value="Go"></li>
+
 	</ul>
-<a id="navicon" class="navicon" href="javascript:void(0);" onclick="myFunction()">&#9776;</a>
+	<a id="navicon" class="navicon" href="javascript:void(0);" onclick="myFunction()">&#9776;</a>
 
    </nav>
 
@@ -49,7 +51,18 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<?php include('companies.php'); ?>
+<?php
+
+if($_GET['p']=="companies") {
+	include('companies.php');
+}elseif($_GET['p']=="knowledge") {
+        include('knowledge.php'); 
+}elseif($_GET['p']=="links") {
+        include('links.php'); 
+}else{
+        include('dashboard.php'); 
+}
+?>
 
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->

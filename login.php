@@ -7,14 +7,12 @@
 </head>
 <body>
 
-	<form action='index.php' method=post><br clear=all /><center><table class="login-grid" id='login'>
-        <tr><th class='main' colspan='2' align='left'>Please login</th>
-        <tr><td id='login'>
-        Login Name</td><td><input type="text" name="username"></td></tr>
-        <tr><td id='login'>Login Password</td><td><input type="password" name="userpass"></td></tr>
-        <tr><td height='20' valign='middle'>&#160;</td>
-        <td height='20' valign='middle'>
-        <input class='button' type=submit name=Login value='Login'>
+	<form action='index.php' method=post><br clear=all /><center><table class="login-box" id='login'>
+        <tr><th></th><th colspan='2' align='left'>Please login</th>
+        <tr><td width="15"></td><td id='login'>Login Name:</td><td><input type="text" name="username"></td></tr>
+        <tr><td width="15"></td><td id='login'>Login Password:</td><td><input type="password" name="userpass"></td></tr>
+        <tr><td colspan="3" style="text-align: center" valign='middle'>
+        <input class='button' type='submit' name='Login' value='Login'>
         </td></tr></table></center>
         </form>
 

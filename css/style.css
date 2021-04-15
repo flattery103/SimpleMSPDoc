@@ -1,9 +1,13 @@
 
 
+
 /* Small Screen */
 @media (min-width: 50px) {
   .container {
     max-width: 900px; }
+  .search-bar {
+    display:block;
+  }  
   .navbar-list {
     display: none; 
     overflow: hidden;
@@ -59,6 +63,10 @@
   max-width: 900px; }
 .navbar {
   display: none; }
+  .search-bar {
+    display:none;
+  }
+
 
 
   .logo {
@@ -75,8 +83,7 @@
   .navicon {
     display:none;
   }
-  .navbar,
-  .navbar-spacer {
+  .navbar {
     display: block;
     width: 100%;
     height: 6.5rem;
@@ -109,10 +116,42 @@
   }
 
 
+/* Large */
+@media (min-width: 920px) {
+  .search-bar {
+    display:block;
+  }
+}
 
 
 
 
+/* add */
+.add-button {
+  float:right;
+  display: inline-block;
+  height: 18px;
+  padding: 0 30px;
+  color: #FFF;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: .1rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background-color: transparent;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  cursor: pointer;
+}
+
+
+/* Login Box */
+.login-box {
+  width: 400px;
+}
 
 
 /* Grid View */
@@ -121,22 +160,15 @@
 }
 
 .company-grid {
-  display: grid;
   border-collapse: collapse;
   min-width: 100%;
-  grid-template-columns: 
-    minmax(75px, 1.67fr)
-    minmax(150px, 1.67fr)
-    minmax(150px, 1.67fr)
-    minmax(150px, 1.67fr)
-    minmax(150px, 1.67fr);
 }
 
 
 thead,
 tbody,
 tr {
-  display: contents;
+  width:100%;
 }
 
 th,
