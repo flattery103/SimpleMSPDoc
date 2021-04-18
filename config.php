@@ -1,6 +1,6 @@
 <?php
 	$host = "localhost";
         $user = "mspdoc";
-        $pass = "Password";
+        $pass = "m5lQxx7FFlNJTuZy";
         $dbname = "mspdoc";
 ?>

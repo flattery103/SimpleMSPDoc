@@ -8,9 +8,9 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <title>Simple MSP Doc</title>
+  <meta name="description" content="Simple IT Documentation for MSP">
+  <meta name="author" content="Rob Campbell">
 
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -53,14 +53,16 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <?php
 
-if($_GET['p']=="companies") {
-	include('companies.php');
-}elseif($_GET['p']=="knowledge") {
-        include('knowledge.php'); 
-}elseif($_GET['p']=="links") {
-        include('links.php'); 
-}else{
-        include('dashboard.php'); 
+if(isset($_GET['p']){
+	if($_GET['p']=="companies") {
+		include('companies.php');
+	}elseif($_GET['p']=="knowledge") {
+	        include('knowledge.php'); 
+	}elseif($_GET['p']=="links") {
+	        include('links.php'); 
+	}else{
+	        include('dashboard.php'); 
+	}
 }
 ?>
 
