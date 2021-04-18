@@ -60,10 +60,11 @@ if(isset($_GET['p'])){
 	        include('knowledge.php'); 
 	}elseif($_GET['p']=="links") {
 	        include('links.php'); 
-	}else{
-	        include('dashboard.php'); 
 	}
+}else{
+	include('dashboard.php'); 
 }
+
 ?>
 
 <!-- End Document

@@ -12,7 +12,7 @@
   </div>
   <div class="row">
     <div class="six columns dash-box">Administration<br>Users<br>Settings</br></div>
-    <div class="six columns dash-box">Featured Links<br>Link<br>Link<br>Link<br>Link<br>Link<br>Link</div>
+    <div class="six columns dash-box">Featured Links<br><?php showLinks(); ?></div>
   </div>
 
 
@@ -29,6 +29,14 @@
 		$result = QueryMysql($query);
 		$row = @mysqli_num_rows($result);
 		return $row;
+	}
+
+	function showLinks() {
+		$query = "SELECT * FROM links WHERE featured='1'";
+		$result = QueryMysql($query);
+                while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
+			echo "&#9733; <a href='".$row['link']."' target='_blank'> ".$row['name']."</a><br>";
+		}
 	}
 ?>
 

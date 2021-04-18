@@ -4,11 +4,9 @@
 TODO
 
 
--Links (display, add, edit, delete)
-
 -Knowledge (display, add, edit, delete)
 
--Dashboard (Box for links, Company List, Knowledge Search box?)
+- (STARTED) Dashboard (Box for links, Company List, Knowledge Search box?)
 
 -Enable Seach in header
 
