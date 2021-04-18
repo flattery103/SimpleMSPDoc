@@ -26,7 +26,7 @@
 	if(!isset($_GET['c'])){
 		if(!isset($_GET['aa'])) {
 			//Show Company list Grid
-			echo '<table class="company-grid"><thead><tr><th>Acctout</th><th>Company</th><th>Contact</th><th>Email</th><th>Location</th><th><a class="add-button" href="index.php?p=companies&aa=addcompany">Add</a></th></tr></thead><tbody>';
+			echo '<table class="company-grid"><thead><tr><th>Account</th><th>Company</th><th>Contact</th><th>Email</th><th>Location</th><th><a class="add-button" href="index.php?p=companies&aa=addcompany">Add</a></th></tr></thead><tbody>';
 			$query = "SELECT * FROM companies";
 			$result = QueryMysql($query);
 		        while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
