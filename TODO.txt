@@ -1,16 +1,4 @@
-
-
-
 TODO
-
-
--Knowledge (display, add, edit, delete)
-
-- (STARTED) Dashboard (Box for links, Company List, Knowledge Search box?)
-
--Enable Seach in header
-
--Create User management area
 
 -Create installation script
 

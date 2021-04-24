@@ -1,8 +1,6 @@
 <?php
 
 	//Sanitize inputs
-	if(isset($_GET['c'])){$_GET['c']=filter_var($_GET['c'], FILTER_SANITIZE_STRING);}
-	if(isset($_GET['a'])){$_GET['a']=filter_var($_GET['a'], FILTER_SANITIZE_STRING);}
 	if(isset($_GET['ec'])){$_GET['ec']=filter_var($_GET['ec'], FILTER_SANITIZE_STRING);}
 
 	if(isset($_GET['delasset'])){
@@ -55,7 +53,7 @@
 				<div class="container"><div class="row"><div class="six columns">
 					<label>Account</label>
 					<input class="u-full-width" type="text" placeholder="123456" id="account" name="account">
-					</div><div>
+					</div><div class="six columns">
 					<label for="exampleEmailInput">Company</label>
 					<input class="u-full-width" type="text" placeholder="Acme Tools" id="company" name="company">
 				</div>

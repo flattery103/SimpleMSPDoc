@@ -1,6 +1,12 @@
 <?php
 
-
+//log off user
+if(isset($_GET['logout'])) {
+	$session_string = rand();
+	$session_string = sha1($session_string);
+	$query = "UPDATE users SET session_id = '$session_string' WHERE session_id='".$_COOKIE['session_id']."'";
+	$result = QueryMysql($query);
+}
 //Initiate logging in. Check password and register login
 if(isset($_POST['Login'])) {
 	$_POST['username']=filter_var($_POST['username'], FILTER_SANITIZE_STRING);

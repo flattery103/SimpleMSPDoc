@@ -11,7 +11,7 @@
     <div class="twelve columns">&nbsp;</div>
   </div>
   <div class="row">
-    <div class="six columns dash-box">Administration<br>Users<br>Settings</br></div>
+    <div class="six columns dash-box">Administration<br><a href="index.php?p=admin&a=users">Users</a><br><a href="index.php?p=admin&a=settings">Settings</a></br></div>
     <div class="six columns dash-box">Featured Links<br><?php showLinks(); ?></div>
   </div>
 
