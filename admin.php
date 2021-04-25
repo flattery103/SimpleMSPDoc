@@ -49,9 +49,9 @@ if(isset($_GET['a'])){
 	}elseif($_GET['a']=="settings"){
 		settingsPage();
 	}elseif($_GET['a']=="adduserform"){
-		userForm("addUser", 0);
+		userForm("addUser", 0,$sec_levels);
 	}elseif($_GET['a']=="edituserform"){
-		userForm("editUser", $_GET['id']);
+		userForm("editUser", $_GET['id'], $sec_levels);
 	}
 
 
@@ -67,7 +67,7 @@ function settingsPage(){
 		</div>';
 }
 
-function userForm($action, $id) {
+function userForm($action, $id, $sec_levels) {
 	if($action=="editUser") {
 		$query="SELECT * FROM users WHERE id='$id'";
 		$result = QueryMysql($query);
@@ -94,7 +94,14 @@ function userForm($action, $id) {
 		<input class="u-full-width" type="text" placeholder="Login Username" id="username" name="username" value="'.$row['username'].'">
 		</div><div class="six columns">
 		<label>Security Level</label>
-		<input class="u-full-width" type="text" placeholder="0 - 20" id="security" name="security" value="'.$row['security'].'">
+		<select class="u-full-width" name="security">';
+		if(isset($row['security'])){ echo '<option value="'.$row['security'].'">'.$sec_levels[$row['security']].'</option>'; }
+
+		foreach($sec_levels as $k => $v){
+			echo '<option value="'.$k.'">'.$v.'</option>';
+		}
+
+		echo '</select>
 	</div>
 	<div class="row">
 		<div class="six columns">
