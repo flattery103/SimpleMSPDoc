@@ -9,6 +9,10 @@
 		$query = "UPDATE links SET name='".$_POST['siteName']."', link='".$_POST['url']."',featured='".$_POST['feature']."' WHERE id='".$_GET['id']."'";
 		$result = QueryMysql($query);
 		echo "<script>alert('".$_POST['siteName']." Updated')</script>";
+	}elseif(isset($_GET['dellink'])) {
+		$query="DELETE FROM links WHERE id='".$_GET['id']."'";
+		$result = QueryMysql($query);
+		echo "<script>alert('Link Deleted')</script>";
 	}
 
 	if(isset($_GET['a'])) {
@@ -46,10 +50,13 @@ function editLink($id){
 	    <div class="two columns">
 		<input class="button-primary" type="submit" value="Update Link">
 	    </div>
-	    <div class="ten columns">
+	    <div class="eight columns">
 		<label class="featured">
 		<input type="checkbox" name="feature" value="1"'.$featuredCk.'><span class="label-body">Feature on Dashboard</span>
 		</label>
+	    </div>
+	    <div class="two columns">
+<a onclick="return confirm(\'Are you sure you want to delete this link?\')" class="del-button" href="index.php?p=links&dellink=true&id='.$row['id'].'">Delete Link</a>
 	    </div>
 	</form>
 	</div>
