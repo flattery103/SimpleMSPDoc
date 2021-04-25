@@ -1,4 +1,4 @@
-# SimpleMSPDoc
+# SimpleMSPDoc RC 1.0
 I wasn't happy with what other IT documention software had.
 I felt they over complicated things and required so much clicky clicky to get to anything.
 
