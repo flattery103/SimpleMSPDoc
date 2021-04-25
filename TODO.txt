@@ -1,9 +1,11 @@
 TODO
 
--Create installation script
-
 Release 1.0 RC
 
+Beyond 1.0
+-Add WYSIWYG CKEDITOR
+-Pretty things up
+-File uploading
 
 Future ideas.
 -enable security permissions to block edit pages from read only users level.

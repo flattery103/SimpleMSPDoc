@@ -1,5 +1,13 @@
 <?php
-include('config.php');
+
+//Sanitize inputs
+if(isset($_POST['security'])){$_POST['security']=filter_var($_POST['security'], FILTER_SANITIZE_STRING);}
+if(isset($_POST['username'])){$_POST['username']=filter_var($_POST['username'], FILTER_SANITIZE_STRING);}
+if(isset($_POST['password'])){$_POST['password']=filter_var($_POST['password'], FILTER_SANITIZE_STRING);}
+if(isset($_POST['fname'])){$_POST['fname']=filter_var($_POST['fname'], FILTER_SANITIZE_STRING);}
+if(isset($_POST['lname'])){$_POST['lname']=filter_var($_POST['lname'], FILTER_SANITIZE_STRING);}
+if(isset($_GET['deluser'])){$_GET['deluser']=filter_var($_GET['deluser'], FILTER_SANITIZE_STRING);}
+if(isset($_GET['id'])){$_GET['id']=filter_var($_GET['id'], FILTER_SANITIZE_STRING);}
 
 if(isset($_GET['deluser'])){
 	$query = "DELETE FROM users WHERE id='".$_GET['deluser']."'";

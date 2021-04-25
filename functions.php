@@ -62,4 +62,6 @@ function QueryMysql($query) {
 	return $result;
 }
 
+//Security Levels
+        $sec_levels = array(0 => 'Global Admin',20 => 'Read Only');
 ?>
