@@ -4,6 +4,12 @@
         if(isset($_GET['kb'])){$_GET['kb']=filter_var($_GET['kb'], FILTER_SANITIZE_STRING);}
         if(isset($_GET['cat'])){$_GET['cat']=filter_var($_GET['cat'], FILTER_SANITIZE_STRING);}
 
+if(isset($_GET['delkb'])){
+	$query="DELETE FROM knowledge WHERE id='".$_GET['kb']."'";
+	$result = QueryMysql($query);
+	echo "<script>alert('KB Deleted')</script>";
+}
+
 if(!isset($_GET['a'])){ listCategories(); searchForm(); }else{
 	if($_GET['a']=="showcat"){ showCategory($_GET['cat']); }
 	elseif($_GET['a']=="createkb"){ createKB(); }
@@ -70,7 +76,14 @@ function editKB($id){
 		<div class="twelve columns">
 			<label>Article</label>
 			<textarea class="u-full-width" id="document" name="document">'.$row['document'].'</textarea>
+		</div>
+	</div>
+	<div class="row">
+		<div class="ten columns">
 			<input class="button-primary" type="submit" value="Update KB Document">
+		</div>
+		<div class="two columns">
+<a onclick="return confirm(\'Are you sure you want to delete this KB?\')" class="del-button" href="index.php?p=knowledge&delkb=true&kb='.$row['id'].'">Delete KB</a>
 		</div>
 	</div></div></form>';
 }
