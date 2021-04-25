@@ -6,8 +6,8 @@ Beyond 1.0
 -Add WYSIWYG CKEDITOR
 -Pretty things up
 -File uploading
-
-Future ideas.
+-copy button near asset items like passwords
+-hide passwords and allow to unhide
 -enable security permissions to block edit pages from read only users level.
 -Columns more configurable
 
