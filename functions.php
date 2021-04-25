@@ -62,6 +62,67 @@ function QueryMysql($query) {
 	return $result;
 }
 
+function ckeditorJS($id) {
+	$test= "<script>
+	ClassicEditor
+	    .create( document.querySelector( '$id' ) )
+	    .then( editor => {
+	        console.log( editor );
+	    } )
+	    .catch( error => {
+	        console.error( error );
+	    } );
+	</script>";
+
+echo "<script>ClassicEditor
+			.create( document.querySelector( '$id' ), {
+
+				toolbar: {
+					items: [
+						'bold',
+						'italic',
+						'underline',
+						'|',
+						'removeFormat',
+						'strikethrough',
+						'highlight',
+						'|',
+						'link',
+						'|',
+						'bulletedList',
+						'numberedList',
+						'outdent',
+						'indent',
+						'|',
+						'insertTable',
+						'codeBlock',
+						'horizontalLine',
+						'|',
+						'undo',
+						'redo'
+					]
+				},
+				language: 'en',
+				table: {
+					contentToolbar: [
+						'tableColumn',
+						'tableRow',
+						'mergeTableCells'
+					]
+				},
+				licenseKey: '',
+
+			} )
+			.then( editor => {
+				window.editor = editor;
+			} )
+			.catch( error => {
+				console.error( error );
+			} );
+	</script>";
+
+}
+
 //Security Levels
         $sec_levels = array(0 => 'Global Admin',20 => 'Read Only');
 ?>

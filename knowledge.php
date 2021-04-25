@@ -195,4 +195,5 @@ function showCategory($category){
 }
 
 
+ckeditorJS("#document");
 ?>

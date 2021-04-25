@@ -449,5 +449,5 @@
 		}
 	}
 
+ckeditorJS("#notes");
 ?>
-
