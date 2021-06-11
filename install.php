@@ -163,7 +163,7 @@ function createTables(){
 	echo "links table created<br>";
 
 
-	$query="CREATE TABLE users (id int NOT NULL AUTO_INCREMENT,security int NOT NULL DEFAULT 1000,username varchar(255) NOT NULL,password varchar(255) NOT NULL,fname varchar(255) NOT NULL,lname varchar(255) NOT NULL,session_id varchar(255) NOT NULL,PRIMARY KEY (id))";
+	$query="CREATE TABLE users (id int NOT NULL AUTO_INCREMENT,security int NOT NULL DEFAULT 1000,username varchar(255) NOT NULL,password varchar(255) NOT NULL,fname varchar(255) NOT NULL,lname varchar(255) NOT NULL,email varchar(255) NOT NULL,session_id varchar(255) NOT NULL, req_mfa tinyint(1) NOT NULL, mfa int NOT NULL,PRIMARY KEY (id))";
 	QueryMysql($query);
 	echo "users table created<br>";
 
