@@ -163,7 +163,7 @@ function createTables(){
 	echo "links table created<br>";
 
 
-	$query="CREATE TABLE users (id int NOT NULL AUTO_INCREMENT,security int NOT NULL DEFAULT 1000,username varchar(255) NOT NULL,password varchar(255) NOT NULL,fname varchar(255) NOT NULL,lname varchar(255) NOT NULL,session_id varchar(255) NOT NULL,PRIMARY KEY (id))";
+	$query="CREATE TABLE users (id int NOT NULL AUTO_INCREMENT,security int NOT NULL DEFAULT 1000,username varchar(255) NOT NULL,password varchar(255) NOT NULL,fname varchar(255) NOT NULL,lname varchar(255) NOT NULL,email varchar(255) NOT NULL,session_id varchar(255) NOT NULL, req_mfa tinyint(1) NOT NULL, mfa int NOT NULL,PRIMARY KEY (id))";
 	QueryMysql($query);
 	echo "users table created<br>";
 
@@ -171,7 +171,7 @@ function createTables(){
 	$session_string = sha1($session_string);
 	$passnew=$_POST['password'];
 	$password=password_hash($passnew, PASSWORD_DEFAULT);
-	$query="INSERT INTO users (id, security, username, password, fname, lname, session_id) VALUES(1, 0, '".$_POST['username']."','$password', '".$_POST['fname']."', '".$_POST['lname']."','$session_string')";
+	$query="INSERT INTO users (id, security, username, password, fname, lname, email, session_id, req_mfa, mfa) VALUES(1, 0, '".$_POST['username']."','$password', '".$_POST['fname']."', '".$_POST['lname']."','','$session_string','0','0')";
 	QueryMysql($query);
 	echo "First user created<br>";
 

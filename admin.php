@@ -23,7 +23,7 @@ if(isset($_GET['a'])){
 			$session_string = sha1($session_string);
 			$passnew=$_POST['password'];
 			$password=password_hash($passnew, PASSWORD_DEFAULT);
-			$query="INSERT INTO users (security,username,password,fname,lname,session_id) VALUES ('".$_POST['security']."','".$_POST['username']."','".$password."','".$_POST['fname']."','".$_POST['lname']."','".$session_string."')";
+			$query="INSERT INTO users (security,username,password,fname,lname,email,session_id,req_mfa) VALUES ('".$_POST['security']."','".$_POST['username']."','".$password."','".$_POST['fname']."','".$_POST['lname']."','".$_POST['email']."','".$session_string."','".$_POST['req_mfa']."')";
 			$result = QueryMysql($query);
 			echo "<script>alert('User Added');</script>";
 		}elseif(isset($_GET['update'])) {
@@ -32,9 +32,9 @@ if(isset($_GET['a'])){
 				$session_string = sha1($session_string);
 				$passnew=$_POST['password'];
 				$password=password_hash($passnew, PASSWORD_DEFAULT);
-				$query = "UPDATE users SET security='".$_POST['security']."',username='".$_POST['username']."',password='$password',fname='".$_POST['fname']."',lname='".$_POST['lname']."',session_id='$session_string' WHERE id='".$_GET['id']."'";
+				$query = "UPDATE users SET security='".$_POST['security']."',username='".$_POST['username']."',password='$password',fname='".$_POST['fname']."',lname='".$_POST['lname']."',email='".$_POST['email']."',session_id='$session_string',req_mfa='".$_POST['req_mfa']."' WHERE id='".$_GET['id']."'";
 			}else{
-				$query = "UPDATE users SET security='".$_POST['security']."',username='".$_POST['username']."',fname='".$_POST['fname']."',lname='".$_POST['lname']."' WHERE id='".$_GET['id']."'";
+				$query = "UPDATE users SET security='".$_POST['security']."',username='".$_POST['username']."',fname='".$_POST['fname']."',lname='".$_POST['lname']."',email='".$_POST['email']."',req_mfa='".$_POST['req_mfa']."' WHERE id='".$_GET['id']."'";
 			}
 			$result = QueryMysql($query);
 			echo "<script>alert('User ".$_POST['username']." Updated');</script>";
@@ -111,6 +111,19 @@ function userForm($action, $id, $sec_levels) {
 		<label>Password Again</label>
 		<input class="u-full-width" type="password" placeholder="Monkey123" id="password2" name="password2">
 	</div>
+
+	<div class="row">
+		<div class="six columns">
+		<label>Email</label>
+		<input class="u-full-width" type="email" placeholder="name@email.com" id="email" name="email" value="'.$row['email'].'">
+		</div><div class="six columns">
+		<label>MFA</label>
+		Require MFA<input class="u-full-width" type="checkbox" id="req_req" name="req_mfa" value="1" ';
+			if($row['req_mfa']==1){echo " checked";}
+		echo '>
+	</div>
+
+
 	<div class="row">
 		<div class="six columns">
 		<input class="button-primary" type="submit" value="'.$submitTxt.'">
