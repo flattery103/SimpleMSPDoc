@@ -171,7 +171,7 @@ function createTables(){
 	$session_string = sha1($session_string);
 	$passnew=$_POST['password'];
 	$password=password_hash($passnew, PASSWORD_DEFAULT);
-	$query="INSERT INTO users (id, security, username, password, fname, lname, session_id) VALUES(1, 0, '".$_POST['username']."','$password', '".$_POST['fname']."', '".$_POST['lname']."','$session_string')";
+	$query="INSERT INTO users (id, security, username, password, fname, lname, email, session_id, req_mfa, mfa) VALUES(1, 0, '".$_POST['username']."','$password', '".$_POST['fname']."', '".$_POST['lname']."','','$session_string','0','0')";
 	QueryMysql($query);
 	echo "First user created<br>";
 
