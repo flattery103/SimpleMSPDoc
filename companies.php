@@ -164,11 +164,12 @@
 	else {
 		if(!isset($_GET['aa'])){
 			//first need to get list of tabs SHOW TAB LISTS
-			$query = "SELECT DISTINCT tab_name FROM assets WHERE company_id='".$_GET['c']."'";
+			$query = "SELECT DISTINCT tab_name FROM assets WHERE company_id='".$_GET['c']."' AND item_type='header'";
 			$result = QueryMysql($query);
 	                while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
 				echo '<a class="button" href="index.php?p='.$_GET['p'].'&c='.$_GET['c'].'&a='.$row['tab_name'].'">'.$row['tab_name'].'</a> ';
 			}
+			echo '<a class="button" href="index.php?p=files&c='.$_GET['c'].'&">Files</a> ';
 			echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&aa=addtab">Add</a> ';
 
 			//If tab is selected, SHOW ASSET GRID.
@@ -178,7 +179,7 @@
 				echo '<table class="company-grid">';
 		                while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					if($row['item_type']=="header") { echo '<thead><tr><th>'.$row['column1'].'</th><th>'.$row['column2'].'</th><th>'.$row['column3'].'</th><th>'.$row['column4'].'</th><th>'.$row['column5'].'</th><th><a class="add-button" href="'.$_SERVER['REQUEST_URI'].'&aa=addasset">Add</a> <a class="add-button" href="'.$_SERVER['REQUEST_URI'].'&aa=edittab&ec='.$row['id'].'">Edit Tab</a></th></tr></thead><tbody>'; }
-					else{	echo '<tr><td>'.$row['column1'].'</td><td>'.$row['column2'].'</td><td>'.$row['column3'].'</td><td>'.$row['column4'].'</td><td>'.$row['column5'].'</td><td><a href="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$row['id'].'&aa=editasset">Edit</a></td></tr>'; }
+					else if($row['item_type']=="asset"){	echo '<tr><td>'.$row['column1'].'</td><td>'.$row['column2'].'</td><td>'.$row['column3'].'</td><td>'.$row['column4'].'</td><td>'.$row['column5'].'</td><td><a href="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$row['id'].'&aa=editasset">Edit</a></td></tr>'; }
 				}
 				echo '</tbody></table>';
 			}
