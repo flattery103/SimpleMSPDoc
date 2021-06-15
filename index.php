@@ -77,7 +77,9 @@ if(isset($_GET['p'])){
                 include('search.php');
 	}elseif($_GET['p']=="admin") {
                 include('admin.php');
-	}
+	}elseif($_GET['p']=="files") {
+                include('files.php');
+        }
 }else{
 	include('dashboard.php');
 
