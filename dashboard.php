@@ -14,6 +14,8 @@
     <div class="six columns dash-box">Administration<br>
 <?php if(securityLevel()<20){
 	echo '<a href="index.php?p=admin&a=users">Users</a><br><a href="index.php?p=admin&a=settings">Settings</a><br>';
+}else{
+	echo '<a href="index.php?p=admin&a=account">My Account</a><br>';
 }
 ?>
 <a href="index.php?logout=true">Logout</a><br></div>
