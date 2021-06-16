@@ -46,6 +46,8 @@ if(isset($_GET['a'])){
 			echo '<td>'.$row['username'].'</td><td>'.$row['fname'].'</td><td>'.$row['lname'].'</td><td>'.$row['security'].' - '. $sec_levels[$row['security']] .'</td><td><a  href="index.php?p=admin&a=edituserform&id='.$row['id'].'">edit</a></td></tr>';
 		}
 		echo '</tbody></table>';
+	}elseif($_GET['a']=="account"){
+		myAccount();
 	}elseif($_GET['a']=="settings"){
 		settingsPage();
 	}elseif($_GET['a']=="adduserform"){
@@ -57,6 +59,92 @@ if(isset($_GET['a'])){
 
 }
 
+
+function myAccount(){
+	if(isset($_GET['update'])){
+		if($_POST['password']!=""){
+		$session_string = rand();
+			$passnew=$_POST['password'];
+			$password=password_hash($passnew, PASSWORD_DEFAULT);
+			$query = "UPDATE users SET password='$password', email='".$_POST['email']."' WHERE session_id='" . $_COOKIE['session_id'] . "'";
+		}else{
+			$query = "UPDATE users SET email='".$_POST['email']."' WHERE session_id='" . $_COOKIE['session_id'] . "'";
+		}
+		$result = QueryMysql($query);
+		echo "<script>alert('Account Updated');</script>";
+
+	}
+
+
+	$query="SELECT * FROM users WHERE session_id='" . $_COOKIE['session_id'] . "'";
+	$result = QueryMysql($query);
+	$row = @mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+	echo '<div class="container"><form action="index.php?p=admin&a=account&update=true" onSubmit ="return checkPassword(this)" method="POST">';
+
+	echo '
+	<div class="row">
+		<div class="six columns">
+		<label>Password </label>
+		<input class="u-full-width" type="password" placeholder="**********" id="password" name="password">
+		</div><div class="six columns">
+		<label>Password Again</label>
+		<input class="u-full-width" type="password" placeholder="**********" id="password2" name="password2">
+	</div>
+
+	<div class="row">
+		<div class="six columns">
+		<label>Email</label>
+		<input class="u-full-width" type="email" placeholder="name@email.com" id="email" name="email" value="'.$row['email'].'">
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="six columns">
+		<input class="button-primary" type="submit" value="Update">
+		</div>';
+
+	echo '</div>
+
+	</div></form>';
+
+
+
+        echo '<script>
+
+            // Function to check Whether both passwords
+            // is same or not.
+            function checkPassword(form) {
+                password1 = form.password.value;
+                password2 = form.password2.value;
+
+                // If password not entered
+                if (password1 == \'\') {
+		';
+		echo '}
+
+                // If confirm password not entered
+                else if (password2 == \'\') {
+                    alert ("Please enter confirm password");
+		    return false;
+		}
+
+                // If Not same return False.
+                else if (password1 != password2) {
+                    alert ("\nPassword did not match: Please try again...")
+                    return false;
+                }
+
+                // If same return True.
+                else{
+                    return true;
+                }
+            }
+        </script>';
+
+
+}
 
 function settingsPage(){
 	echo '<div class="container">
@@ -176,8 +264,6 @@ function userForm($action, $id, $sec_levels) {
                 }
             }
         </script>';
-
-
 
 }
 
