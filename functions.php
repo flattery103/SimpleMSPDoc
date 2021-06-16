@@ -83,10 +83,10 @@ function mailMFA($username){
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 	$FromEmail = "noreply@StarHostDesign.com";
 
-	$Message = "Your MFA code is: " . $row['mfa'];
+	$Message = "Here's your one-time verification token: " . $row['mfa'];
 
 	$MailDate=Date(r) . " (CDT)";
-	mail($row['email'], "MFA Code", "$Message", $headers."Date: $MailDate\nFrom: \"Simple MSPDoc\" <$FromEmail> \r\nReply-To: $FromEmail\r\n");
+	mail($row['email'], "Authentication Token", "$Message", $headers."Date: $MailDate\nFrom: \"Simple MSPDoc\" <$FromEmail> \r\nReply-To: $FromEmail\r\n");
 
 	//echo "Send email to $row[email] with MFA $row[mfa]";
 }
@@ -143,7 +143,12 @@ echo '<html>
 </html>';
 }
 
-
+function securityLevel(){
+	$query="SELECT * FROM users WHERE session_id='" . $_COOKIE['session_id'] . "'";
+	$result = QueryMysql($query);
+	$row = @mysqli_fetch_array($result, MYSQLI_ASSOC);
+	return $row['security'];
+}
 
 
 function ckeditorJS($id) {

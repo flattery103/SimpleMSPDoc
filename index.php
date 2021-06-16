@@ -39,7 +39,7 @@
 
     <img class="logo" src='MSPDoc.png'>
     <nav class="navbar">
-        <ul class="navbar-list" id="navbar-list">
+        <ul class="navbar-list" style="list-style: none;" id="navbar-list">
           <li class="navbar-item"><a class="navbar-link" href="index.php">Dashboard</a></li>
           <li class="navbar-item"><a class="navbar-link" href="index.php?p=companies">Companies</a></li>
           <li class="navbar-item"><a class="navbar-link" href="index.php?p=knowledge">Knowledge</a></li>
@@ -77,7 +77,9 @@ if(isset($_GET['p'])){
                 include('search.php');
 	}elseif($_GET['p']=="admin") {
                 include('admin.php');
-	}
+	}elseif($_GET['p']=="files") {
+                include('files.php');
+        }
 }else{
 	include('dashboard.php');
 
