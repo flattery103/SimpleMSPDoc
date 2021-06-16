@@ -169,7 +169,7 @@
 	                while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
 				echo '<a class="button" href="index.php?p='.$_GET['p'].'&c='.$_GET['c'].'&a='.$row['tab_name'].'">'.$row['tab_name'].'</a> ';
 			}
-			echo '<a class="button" href="index.php?p=files&c='.$_GET['c'].'&">Files</a> ';
+			echo '<a class="button" href="index.php?p=files&c='.$_GET['c'].'">Files</a> ';
 			echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&aa=addtab">Add</a> ';
 
 			//If tab is selected, SHOW ASSET GRID.

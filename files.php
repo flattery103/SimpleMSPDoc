@@ -22,6 +22,12 @@ if(isset($_GET['f'])){
 	}
 	exit;
 }
+
+if(isset($_GET['pre'])){
+	echo "TODO: Preview file";
+	exit;
+}
+
 if(isset($_GET['upload'])){
 	$updir=$file_upload_dir."/".$_GET['c'].'/';
 	if (!is_dir($updir)) {mkdir($updir, 0755);}
@@ -71,7 +77,9 @@ if(isset($_GET['a'])){
 	for($i=2;$i<sizeof($dir);$i++){
 		//TODO: Provide preview link for txt and images
 		//TODO: Provide delete button
-		echo '<tr><td></td><td>'.$dir[$i].'</td><td><a href="files.php?c='.$_GET['c'].'&f='.$dir[$i].'" target="_blank">Download</a> </td></tr>';
+		$file_extn = substr($dir[$i], strrpos($dir[$i], '.')+1);
+		if($file_extn=="txt"){$preview=' <a href="files.php?c='.$_GET['c'].'&pre='.$dir[$i].'" target="_blank">Preview</a>';}else{$preview="";}
+		echo '<tr><td></td><td>'.$dir[$i].'</td><td><a href="files.php?c='.$_GET['c'].'&f='.$dir[$i].'" target="_blank">Download</a>'.$preview.' </td></tr>';
 	}
 }
 ?>
