@@ -24,11 +24,21 @@
 	if(!isset($_GET['c'])){
 		if(!isset($_GET['aa'])) {
 			//Show Company list Grid
-			echo '<table class="company-grid"><thead><tr><th>Account</th><th>Company</th><th>Contact</th><th>Email</th><th>Location</th><th><a class="add-button" href="index.php?p=companies&aa=addcompany">Add</a></th></tr></thead><tbody>';
+			echo '<table class="company-grid"><thead><tr><th>Account</th><th>Company</th><th>Contact</th><th>Email</th><th>Location</th><th>';
+
+			if(securityLevel()<20){
+				echo '<a class="add-button" href="index.php?p=companies&aa=addcompany">Add</a>';
+			}
+			echo '</th></tr></thead><tbody>';
+
 			$query = "SELECT * FROM companies";
 			$result = QueryMysql($query);
 		        while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
-				echo "<tr><td>".$row['account']."</td><td><a href='index.php?p=companies&c=".$row['id']."'>  ".$row['company']."</td><td>".$row['contact']."</td><td>".$row['email']."</td><td>".$row['location']."</td><td><a href='index.php?p=companies&aa=editcompany&ec=".$row['id']."'>Edit</a></td></tr>";
+				echo "<tr><td>".$row['account']."</td><td><a href='index.php?p=companies&c=".$row['id']."'>  ".$row['company']."</td><td>".$row['contact']."</td><td>".$row['email']."</td><td>".$row['location']."</td><td>";
+				if(securityLevel()<20){
+					echo "<a href='index.php?p=companies&aa=editcompany&ec=".$row['id']."'>Edit</a>";
+				}
+				echo "</td></tr>";
 			}
 			echo '</tbody></table>';
 			//End Show Company list Grid
@@ -170,7 +180,9 @@
 				echo '<a class="button" href="index.php?p='.$_GET['p'].'&c='.$_GET['c'].'&a='.$row['tab_name'].'">'.$row['tab_name'].'</a> ';
 			}
 			echo '<a class="button" href="index.php?p=files&c='.$_GET['c'].'">Files</a> ';
-			echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&aa=addtab">Add</a> ';
+			if(securityLevel()<20){
+				echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&aa=addtab">Add</a> ';
+			}
 
 			//If tab is selected, SHOW ASSET GRID.
 			if(isset($_GET['a'])) {
@@ -178,7 +190,12 @@
 				$result = QueryMysql($query);
 				echo '<table class="company-grid">';
 		                while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
-					if($row['item_type']=="header") { echo '<thead><tr><th>'.$row['column1'].'</th><th>'.$row['column2'].'</th><th>'.$row['column3'].'</th><th>'.$row['column4'].'</th><th>'.$row['column5'].'</th><th><a class="add-button" href="'.$_SERVER['REQUEST_URI'].'&aa=addasset">Add</a> <a class="add-button" href="'.$_SERVER['REQUEST_URI'].'&aa=edittab&ec='.$row['id'].'">Edit Tab</a></th></tr></thead><tbody>'; }
+					if($row['item_type']=="header") { echo '<thead><tr><th>'.$row['column1'].'</th><th>'.$row['column2'].'</th><th>'.$row['column3'].'</th><th>'.$row['column4'].'</th><th>'.$row['column5'].'</th><th>';
+					if(securityLevel()<20){
+						echo '<a class="add-button" href="'.$_SERVER['REQUEST_URI'].'&aa=addasset">Add</a> <a class="add-button" href="'.$_SERVER['REQUEST_URI'].'&aa=edittab&ec='.$row['id'].'">Edit Tab</a>';
+					}
+					echo '</th></tr></thead><tbody>'; }
+
 					else if($row['item_type']=="asset"){	echo '<tr><td>'.$row['column1'].'</td><td>'.$row['column2'].'</td><td>'.$row['column3'].'</td><td>'.$row['column4'].'</td><td>'.$row['column5'].'</td><td><a href="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$row['id'].'&aa=editasset">Edit</a></td></tr>'; }
 				}
 				echo '</tbody></table>';
@@ -402,9 +419,11 @@
                                 $values = @mysqli_fetch_array($result, MYSQLI_ASSOC);
 
 				//Edit Asset Form
-				echo '
-                                <form action="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$_GET['ec'].'&aa=editasset&edit=true" method="POST">
-                                <div class="container">
+				if(securityLevel()<20){
+					echo '<form action="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$_GET['ec'].'&aa=editasset&edit=true" method="POST">';
+				}
+
+                                echo '<div class="container">
 				<div class="row">
                                         <div class="twelve columns">
 					<h3>'.$row['tab_name'].'</h3>
@@ -433,15 +452,17 @@
                                         </div><div class="six columns">
                                         <label>Note</label>
                                         <textarea class="u-full-width" id="notes" name="notes">'.$values['notes'].'</textarea>
-                                </div>
-                                <div class="row">
-                                        <div class="twelve columns">
-                                        <input class="button-primary" type="submit" value="Edit Asset"> 
-					<a onclick="return confirm(\'Are you sure you want to delete this asset?\')" class="del-button" href="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$_GET['ec'].'&delasset=true">Delete Asset</a>
-                                        </div>
-                                </div>
+                                </div>';
 
-                                </div></form>';
+				if(securityLevel()<20){
+                                	echo '<div class="row">
+                                        	<div class="twelve columns">
+                                        	<input class="button-primary" type="submit" value="Edit Asset"> 
+						<a onclick="return confirm(\'Are you sure you want to delete this asset?\')" class="del-button" href="index.php?p=companies&c='.$_GET['c'].'&a='.$_GET['a'].'&ec='.$_GET['ec'].'&delasset=true">Delete Asset</a>
+                                        	</div>
+                                	</div>';
+				}
+                                echo '</div></form>';
 
 
 				//Edit asset END

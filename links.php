@@ -66,6 +66,8 @@ function editLink($id){
 
 function showLinks(){
 
+
+if(securityLevel()<20){
 echo '<div class="container">
 <form action="index.php?p=links&a=addlink&add=true" method="POST">
   <div class="row">
@@ -90,16 +92,21 @@ echo '<div class="container">
     </div>
 </form>
 </div>
-</div>
+</div>';
+}
 
 
-
-<table class="company-grid"><thead><tr><th>Site Name</th><th>Link URL</th><th>&#9733; Featured</th><th></th></tr></thead><tbody>';
+echo '<table class="company-grid"><thead><tr><th>Site Name</th><th>Link URL</th><th>&#9733; Featured</th><th></th></tr></thead><tbody>';
 $query = "SELECT * FROM links";
 $result = QueryMysql($query);
 while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
 	if(isset($row['featured'])){if($row['featured']==1){$featured="&#9733;&#9733;&#9733;";}else{$featured="";}}
-	echo '<tr><td>'.$row['name'].'</td><td><a href="'.$row['link'].'" target="_blank">'.$row['link'].'</a></td><td>'.$featured.'</td><td><a href="index.php?p=links&a=editlink&id='.$row['id'].'">Edit</a></td></tr>';
+	echo '<tr><td>'.$row['name'].'</td><td><a href="'.$row['link'].'" target="_blank">'.$row['link'].'</a></td><td>'.$featured.'</td><td>';
+	if(securityLevel()<20){
+		echo '<a href="index.php?p=links&a=editlink&id='.$row['id'].'">Edit</a>';
+	}
+	echo '</td></tr>';
+
 }
 echo '</tbody></table>';
 }

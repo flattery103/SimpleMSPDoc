@@ -56,8 +56,9 @@ while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
         echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&a='.$row['tab_name'].'">'.$row['tab_name'].'</a> ';
 }
 echo '<a class="button" href="index.php?p=files&c='.$_GET['c'].'">Files</a> ';
-echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&aa=addtab">Add</a> ';
-
+if(securityLevel()<20){
+	echo '<a class="button" href="index.php?p=companies&c='.$_GET['c'].'&aa=addtab">Add</a> ';
+}
 
 if(isset($_GET['a'])){
 	if($_GET['a']=="upload"){
@@ -70,7 +71,11 @@ if(isset($_GET['a'])){
 	}
 }else{
 	//Files code.
-	echo '<table class="company-grid"><thead><tr><th></th><th>File Name</th><th>Action<a class="add-button" href="index.php?p=files&c='.$_GET['c'].'&a=upload">Upload Files</a></th></tr></thead>';
+	echo '<table class="company-grid"><thead><tr><th></th><th>File Name</th><th>Action';
+	if(securityLevel()<20){
+		echo '<a class="add-button" href="index.php?p=files&c='.$_GET['c'].'&a=upload">Upload Files</a>';
+	}
+	echo '</th></tr></thead>';
 
 	$dir = scandir($file_upload_dir."/".$_GET['c']."/");
 	//print_r($dir);

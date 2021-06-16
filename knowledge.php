@@ -111,14 +111,16 @@ function showKB($category,$newcategory,$title,$tags,$document,$add){
 	<div class="row">
 		<div class="twelve columns doc-box">
 			'.$document.'
-		</div>
-		<div class="two columns">
+		</div>';
+		if(securityLevel()<20){
+		echo '<div class="two columns">
 			<a class="button button-primary" href="index.php?p=knowledge&a=editkb&kb='.$_GET['kb'].'">Edit</a>
 		</div>
 		<div class="two columns">
 			<a class="button button-primary" onclick="return confirm(\'Are you sure you want to delete this KB?\')" href="index.php?p=knowledge&a=deletekb&kb='.$_GET['kb'].'">Delete</a>
-		</div>
-	</div></div>';
+		</div>';
+		}
+	echo '</div></div>';
 
 }
 
@@ -187,22 +189,31 @@ function searchForm(){
 			<div class="one column">
 				<input class="button-primary" type="submit" value="Search KB">
 			</div>
-		</div>
-
-		<div class="row">
+		</div>';
+	if(securityLevel()<20){
+		echo '<div class="row">
                         <div class="two columns"><a href="index.php?p=knowledge&a=createkb" class="button button-primary">Create KB</a></div>
-		</div>
-	</div>';
+		</div>';
+	}
+	echo '</div>';
 
 }
 
 function showCategory($category){
 	$query = "SELECT * FROM knowledge WHERE category='$category'";
-	echo '<div class="container"><h2>'.$category.'</h2><table class="u-full-width"><thead><tr><th>KB Article</th><th></th><th><a class="add-button" onclick="return confirm(\'Are you sure you want to delete the '.$category.' category and all the KBs in it?\')" href="index.php?p=knowledge&a=deletecat&cat='.$category.'">Delete Category</a></th></tr></thead><tbody>';
+	echo '<div class="container"><h2>'.$category.'</h2><table class="u-full-width"><thead><tr><th>KB Article</th><th></th><th>';
+	if(securityLevel()<20){
+		echo '<a class="add-button" onclick="return confirm(\'Are you sure you want to delete the '.$category.' category and all the KBs in it?\')" href="index.php?p=knowledge&a=deletecat&cat='.$category.'">Delete Category</a>';
+	}
+	echo '</th></tr></thead><tbody>';
 	$result = QueryMysql($query);
 
 	while($row = @mysqli_fetch_array($result, MYSQLI_ASSOC)){
-		echo '<tr><td><a href="index.php?p=knowledge&a=showkb&kb='.$row['id'].'">'.$row['title'].'</a></td><td>'.substr(trim(strip_tags($row['document'])),0,100).'</td><td><a href="index.php?p=knowledge&a=editkb&kb='.$row['id'].'">edit</a></td></tr>';
+		echo '<tr><td><a href="index.php?p=knowledge&a=showkb&kb='.$row['id'].'">'.$row['title'].'</a></td><td>'.substr(trim(strip_tags($row['document'])),0,100).'</td><td>';
+		if(securityLevel()<20){
+			echo '<a href="index.php?p=knowledge&a=editkb&kb='.$row['id'].'">edit</a>';
+		}
+		echo '</td></tr>';
 	}
 	echo '</tbody></table>';
 }

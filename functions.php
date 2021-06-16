@@ -143,7 +143,12 @@ echo '<html>
 </html>';
 }
 
-
+function securityLevel(){
+	$query="SELECT * FROM users WHERE session_id='" . $_COOKIE['session_id'] . "'";
+	$result = QueryMysql($query);
+	$row = @mysqli_fetch_array($result, MYSQLI_ASSOC);
+	return $row['security'];
+}
 
 
 function ckeditorJS($id) {
