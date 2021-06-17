@@ -47,7 +47,7 @@
           <li class="navbar-item search-bar" style="top:15px;">
 	  <?php
 		$action="index.php?p=search";
-		if(isset($_GET['p'])){if(isset($_GET['mod'])){$action=$action."&mod=".$_GET['mod'];}else{$action=$action."&mod=".$_GET['p'];}}
+		if(isset($_GET['p'])){if(isset($_GET['mod'])){$action=$action."&mod=".$_GET['mod'];}else{$action=$action."&mod=".$_GET['p'];}}else{$action=$action."&mod=search";}
 		if(isset($_GET['c'])){$action=$action."&c=".$_GET['c'];}
 		if(isset($_GET['a'])){$action=$action."&a=".$_GET['a'];}
 		echo '<form action="'.$action.'" method="POST">';
