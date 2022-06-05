@@ -1,4 +1,6 @@
 # SimpleMSPDoc RC 1.0
+#Feedback wanted before moving forward past 1.0. Please submit your feedback. Thanks.
+
 I wasn't happy with what other IT documention software had.
 I felt they over complicated things and required so much clicky clicky to get to anything.
 
