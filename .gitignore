@@ -1,0 +1,8 @@
+/vendor/
+/config/local.php
+/var/*
+!/var/.gitkeep
+/dist/
+/.phpunit.cache/
+/.superpowers/
+/node_modules/
