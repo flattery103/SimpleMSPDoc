@@ -1,0 +1,1 @@
+<div class="card"><p>Keep these codes in a safe place. Each works once. They are shown only on this page.</p><div class="recovery-codes"><?php foreach($codes as $code): ?><code><?= $e($code) ?></code><?php endforeach; ?></div><a class="button" href="<?= $link('/') ?>">Continue to workspace</a></div>

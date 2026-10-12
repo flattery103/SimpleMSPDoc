@@ -19,6 +19,6 @@ final class InstallerTest extends DatabaseTestCase
  public function testExistingDatabaseIsRefused(): void {
   $this->db->run('CREATE TABLE legacy(id INT)');$token=SetupToken::generate($this->root);
   $this->expectException(\SimpleMSPDoc\Core\HttpException::class);
-  (new Installer($this->root,dirname(__DIR__,2).'/database/migrations'))->install(['dsn'=>getenv('TEST_DSN'),'username'=>'root','password'=>''],['username'=>'admin','name'=>'Admin','password'=>'Long-enough-password'],$token);
+  (new Installer($this->root,dirname(__DIR__,2).'/database/migrations'))->install(['dsn'=>getenv('TEST_DSN'),'username'=>getenv('TEST_DB_USER')?:'root','password'=>getenv('TEST_DB_PASSWORD')?:''],['username'=>'admin','name'=>'Admin','password'=>'Long-enough-password'],$token);
  }
 }

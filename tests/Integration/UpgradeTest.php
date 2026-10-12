@@ -18,7 +18,7 @@ final class UpgradeTest extends DatabaseTestCase
   self::assertTrue((new Maintenance($this->db))->active());self::assertNull($this->db->one("SELECT * FROM migrations WHERE version='002_broken'"));self::assertNotNull($this->db->one("SELECT * FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name='partial'"));
  }
  public function testNonAdminAndConcurrentUpgradeRejected(): void {
-  $this->schema();$a=new Actor($this->user(),'administrator','staff');$r=$this->runner();$other=\SimpleMSPDoc\Core\Database::connect(['dsn'=>getenv('TEST_DSN'),'username'=>'root','password'=>'']);$other->run('SELECT GET_LOCK(?,0)',[$r->lockName()]);
+  $this->schema();$a=new Actor($this->user(),'administrator','staff');$r=$this->runner();$other=\SimpleMSPDoc\Core\Database::connect(['dsn'=>getenv('TEST_DSN'),'username'=>getenv('TEST_DB_USER')?:'root','password'=>getenv('TEST_DB_PASSWORD')?:'']);$other->run('SELECT GET_LOCK(?,0)',[$r->lockName()]);
   try{$r->apply($a,true);self::fail('Concurrent lock ignored');}catch(\SimpleMSPDoc\Core\HttpException $e){self::assertSame(409,$e->status);}finally{$other->run('SELECT RELEASE_LOCK(?)',[$r->lockName()]);}
   $this->expectException(\SimpleMSPDoc\Core\HttpException::class);$r->apply(new Actor($this->user('technician'),'technician','staff'),true);
  }

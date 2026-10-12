@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= $e($title) ?> · SimpleMSPDoc</title><link rel="stylesheet" href="<?= $link('/assets/app.css') ?>"><script defer src="<?= $link('/assets/app.js') ?>"></script></head>
+<body class="<?= $actor?'signed-in':'guest' ?>">
+<?php if($actor): ?>
+<aside class="sidebar"><a class="brand" href="<?= $link('/') ?>"><span class="brand-icon">S</span><span>SimpleMSPDoc<small>IT documentation</small></span></a>
+<div class="nav-label">WORKSPACE</div><nav><a href="<?= $link('/organizations') ?>">Organizations</a><a href="<?= $link('/search') ?>">Search documentation</a></nav>
+<?php if($actor->role==='administrator'): ?><div class="nav-label">ADMINISTRATION</div><nav><a href="<?= $link('/templates') ?>">Asset templates</a><a href="<?= $link('/users') ?>">Users and access</a><a href="<?= $link('/audit') ?>">Audit history</a><a href="<?= $link('/upgrade') ?>">Database upgrades</a></nav><?php endif; ?>
+<div class="sidebar-bottom"><strong><?= $e($user['name']??'User') ?></strong><small><?= $e(ucfirst($actor->role).' · '.$actor->audience) ?></small><?php if(empty($user['mfa_enabled'])): ?><a href="<?= $link('/mfa/enroll') ?>">Set up MFA</a><?php endif; ?><form method="post" action="<?= $link('/logout') ?>"><?= $csrf ?><button class="sign-out">Sign out</button></form></div></aside>
+<div class="workspace"><header class="topbar"><form action="<?= $link('/search') ?>" class="global-search"><label class="sr-only" for="global-query">Search documentation</label><input id="global-query" name="q" placeholder="Search across your documentation…" value="<?= $e($_GET['q']??'') ?>"><button>Search</button></form>
+<?php $visibleOrgs=(new \SimpleMSPDoc\Modules\Organizations\OrganizationService($ctx->db,$ctx->audit))->listVisible($actor); ?>
+<label class="org-switch"><span class="sr-only">Switch organization</span><select data-org-switch data-base="<?= $link('/organizations/') ?>"><option value="">Select organization</option><?php foreach($visibleOrgs as $o): ?><option value="<?= $e($o['id']) ?>" <?= isset($organization)&&(int)$organization['id']===(int)$o['id']?'selected':'' ?>><?= $e($o['name']) ?></option><?php endforeach; ?></select></label></header>
+<main><div class="page-heading"><div class="eyebrow">YOUR DOCUMENTATION, CONNECTED</div><h1><?= $e($title) ?></h1></div>
+<?php else: ?><main class="guest-main"><a class="brand guest-brand" href="<?= $link('/') ?>"><span class="brand-icon">S</span><span>SimpleMSPDoc<small>IT documentation</small></span></a><h1><?= $e($title) ?></h1><?php endif; ?>
+<?php if(isset($_SESSION['flash'])): ?><div class="notice success" role="status"><?= $e($_SESSION['flash']) ?></div><?php unset($_SESSION['flash']);endif; ?>
+<?= $content ?>
+<footer>SimpleMSPDoc · Self-hosted documentation</footer></main><?php if($actor): ?></div><?php endif; ?></body></html>

@@ -1,35 +1,56 @@
-# SimpleMSPDoc RC 1.0
+# SimpleMSPDoc 2.0 rebuild
 
-## Upcoming rebuild: compatibility notice
+Self-hosted IT documentation for internal IT teams and managed service providers. Designed for quick access to organizations, locations, contacts, assets, and procedures on a standard LAMP server.
 
-SimpleMSPDoc is being redesigned from scratch. **The upcoming rebuilt version will not be backward-compatible with previous versions and will require a fresh database. No migration or in-place upgrade from legacy versions will be provided.**
+## Compatibility notice — fresh installation only
 
-If you use a previous version, retain that installation and back up its database and uploaded files. Install the rebuilt version separately with a new database; do not overwrite your existing installation or point the rebuild at its database.
+**This rebuild is not backward-compatible with previous versions. It requires a fresh database. No legacy migration or in-place upgrade is provided.**
 
-The rebuild is currently in design. The existing code and installation instructions below describe the legacy RC 1.0 application. See the [rebuild design](docs/superpowers/specs/2026-10-12-simplemspdoc-rebuild-design.md) for the proposed replacement.
+Keep any previous SimpleMSPDoc deployment separate. Back up its database and uploaded files. Do not overwrite the previous installation or point this rebuild at its database.
 
-#Feedback wanted before moving forward past 1.0. Please submit your feedback. Thanks.
+This branch is an **alpha rebuild**, not a production release. Review the validation notes and test it with nonproduction documentation first. Future releases of the rebuilt application use tracked database migrations; that does not provide migration from the legacy application.
 
-I wasn't happy with what other IT documention software had.
-I felt they over complicated things and required so much clicky clicky to get to anything.
+## Features
 
-This idea is ready for use. It is still prett basic/Simple with no plans to make it super crazy.
+- Multiple organizations, locations, contacts, and assets
+- Shared asset templates with text, multiline, numeric, date, boolean, URL, and choice fields
+- Rich-text articles, categories, tags, revision history, side-by-side comparison, and restore
+- Private attachments and related-record links
+- Global search scoped to the signed-in user's access
+- Administrator, technician, and read-only roles, plus staff/client classification
+- Internal-only records by default; explicit client-visible sharing
+- Authenticator MFA, recovery codes, login throttling, and administrator MFA requirements
+- Administrator audit history and reversible record/organization archiving
+- Token-protected web installer and administrator-controlled database upgrades
 
-If you want to try it out:
-1. download and put it on your webserver.
-2. create a MySql database.
-3. create a directory for file uploads (best is outside of the web accessable area).
-4. Set permissions on file so the webserver will have read/write access to it.
-5. configure config.php with the database information and pointing to your directory created in step 3.
-6. navigate your webbrowser to the install.php file
-7. follow the steps
-8. remove the install.php file for security
-9. then use.
+A password vault and active Meraki/Microsoft 365 integrations are not included. Connector contracts are reserved for future development.
 
+## Requirements
 
-Contribute.
-If you want to help out in anyway, I welcome your assistance.
+- Apache 2.4 with rewrite support and PHP 8.3 or newer
+- MySQL 8.0 or MariaDB 10.11 or newer
+- PHP extensions: PDO MySQL, mbstring, DOM, fileinfo, OpenSSL; zip for Office document attachments
+- HTTPS for deployed installations
+- Private writable configuration, session, cache, log, and upload directories outside the public webroot
 
-This is writting in PHP/MySQL
+Ubuntu Server 24.04 LTS is the reference deployment. End users install a release ZIP with bundled PHP libraries and frontend assets; Composer, Node.js, Docker, and internet-hosted UI dependencies are unnecessary on the application server.
 
-Find the project at https://github.com/flattery103/SimpleMSPDoc
+## Installation
+
+1. Download and extract a built release ZIP into a new application directory.
+2. Set Apache's DocumentRoot to its `public/` subdirectory. Never serve the application root.
+3. Create an empty database and an application database user.
+4. Give the PHP service user write access to `config/` and `var/` only.
+5. Generate a setup token with `sudo -u www-data php scripts/setup-token.php` from the application directory.
+6. Open `/install` over HTTPS and enter the token, database settings, and first administrator.
+7. Sign in, configure MFA, create organizations, and assign users.
+
+The installer locks itself automatically. See [installation instructions](docs/installation.md), [upgrade instructions](docs/upgrading.md), and [developer instructions](docs/development.md).
+
+## Validation status
+
+The local suite exercises PHP 8.3 and MariaDB 10.11, including actual HTTP installation, client isolation, MFA gating, CSRF, revisions, uploads, relationships, and upgrade failures. The GitHub Actions workflow targets PHP 8.3/8.4/8.5 against MySQL 8.0 and MariaDB 10.11; additional combinations should be claimed as verified only after those jobs pass. Apache deployment validation is documented separately from the PHP development server tests.
+
+## License
+
+GNU GPL v3 or later, continuing the original project's license. Bundled dependencies retain their respective licenses.
