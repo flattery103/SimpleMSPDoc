@@ -1,4 +1,13 @@
 # SimpleMSPDoc RC 1.0
+
+## Upcoming rebuild: compatibility notice
+
+SimpleMSPDoc is being redesigned from scratch. **The upcoming rebuilt version will not be backward-compatible with previous versions and will require a fresh database. No migration or in-place upgrade from legacy versions will be provided.**
+
+If you use a previous version, retain that installation and back up its database and uploaded files. Install the rebuilt version separately with a new database; do not overwrite your existing installation or point the rebuild at its database.
+
+The rebuild is currently in design. The existing code and installation instructions below describe the legacy RC 1.0 application. See the [rebuild design](docs/superpowers/specs/2026-10-12-simplemspdoc-rebuild-design.md) for the proposed replacement.
+
 #Feedback wanted before moving forward past 1.0. Please submit your feedback. Thanks.
 
 I wasn't happy with what other IT documention software had.
