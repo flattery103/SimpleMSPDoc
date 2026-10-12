@@ -15,10 +15,16 @@ final class MfaService
   if($u['mfa_secret'])$secret=$this->decrypt($u['mfa_secret']);else{$secret=TOTP::generate()->getSecret();$this->db->run('UPDATE users SET mfa_secret=? WHERE id=?',[$this->encrypt($secret),$userId]);}
   $totp=TOTP::createFromSecret($secret);$totp->setLabel($u['username']);$totp->setIssuer('SimpleMSPDoc');return ['secret'=>$secret,'uri'=>$totp->getProvisioningUri()];
  }
- public function confirmEnrollment(int $userId,string $code): array {
-  $u=$this->db->one('SELECT * FROM users WHERE id=? AND mfa_enabled=0',[$userId]);if(!$u||!$u['mfa_secret']||!preg_match('/^\d{6}$/',$code)||!TOTP::createFromSecret($this->decrypt($u['mfa_secret']))->verify($code))throw new HttpException(422,'The authenticator code is invalid.');
-  $codes=[];for($i=0;$i<8;$i++)$codes[]=bin2hex(random_bytes(8));$hashes=array_map(fn($c)=>hash('sha256',$c),$codes);
-  $this->db->run('UPDATE users SET mfa_enabled=1,mfa_last_step=?,recovery_codes=? WHERE id=? AND mfa_enabled=0',[(int)floor(time()/30),json_encode($hashes),$userId]);$this->audit->record(Actor::from($u),'mfa.enrolled','user',$userId,null);return $codes;
+ public function confirmEnrollment(int $userId,string $code,?int $expectedSessionVersion=null): array {
+  return $this->db->transaction(function()use($userId,$code,$expectedSessionVersion){
+   $u=$this->db->one('SELECT * FROM users WHERE id=? FOR UPDATE',[$userId]);
+   if(!$u||!$u['active']||($expectedSessionVersion!==null&&(int)$u['session_version']!==$expectedSessionVersion))throw new HttpException(403,'Account changed. Sign in again before enabling MFA.');
+   if($u['mfa_enabled'])throw new HttpException(409,'MFA is already configured.');
+   if(!$u['mfa_secret']||!preg_match('/^\\d{6}$/',$code)||!TOTP::createFromSecret($this->decrypt($u['mfa_secret']))->verify($code))throw new HttpException(422,'The authenticator code is invalid.');
+   $codes=[];for($i=0;$i<8;$i++)$codes[]=bin2hex(random_bytes(8));$hashes=array_map(fn($c)=>hash('sha256',$c),$codes);
+   $this->db->run('UPDATE users SET mfa_enabled=1,mfa_last_step=?,recovery_codes=?,session_version=session_version+1 WHERE id=?',[(int)floor(time()/30),json_encode($hashes),$userId]);
+   $this->audit->record(Actor::from($u),'mfa.enrolled','user',$userId,null);return $codes;
+  });
  }
  public function verify(int $userId,string $code): bool {
   if(!preg_match('/^\d{6}$/',$code))return false;
