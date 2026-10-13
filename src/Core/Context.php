@@ -10,9 +10,9 @@ final class Context
  public ?Database $db=null;
  public ?AuditService $audit=null;
  public function __construct(public string $codeRoot,public string $privateRoot,public Url $url,public array $config=[]){}
- public function render(string $template,array $data=[],int $status=200): void {
+ public function render(string $viewName,array $data=[],int $status=200): void {
   http_response_code($status);$e=fn(mixed $s)=>htmlspecialchars((string)$s,ENT_QUOTES|ENT_SUBSTITUTE,'UTF-8');$url=$this->url;$link=fn(string $s)=>$e($url->to($s));$routeInput=fn(string $path)=>'<input type="hidden" name="route" value="'.$e($path).'">';$csrf='<input type="hidden" name="_csrf" value="'.$e(Csrf::token()).'">';$actor=$this->actor;$user=$this->user;$title=$data['title']??'SimpleMSPDoc';$ctx=$this;
-  extract($data,EXTR_SKIP);ob_start();require $this->codeRoot.'/templates/'.$template.'.php';$content=ob_get_clean();require $this->codeRoot.'/templates/layout.php';
+  extract($data,EXTR_SKIP);if(!isset($organization)&&isset($record['organization_id']))$organization=(new \SimpleMSPDoc\Modules\Organizations\OrganizationService($this->db,$this->audit))->get($actor,(int)$record['organization_id']);ob_start();require $this->codeRoot.'/templates/'.$viewName.'.php';$content=ob_get_clean();require $this->codeRoot.'/templates/layout.php';
  }
  public function redirect(string $path): never {header('Location: '.$this->url->to($path),true,303);exit;}
  public function flash(string $message): void {$_SESSION['flash']=$message;}

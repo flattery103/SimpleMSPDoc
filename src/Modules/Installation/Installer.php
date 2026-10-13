@@ -18,8 +18,9 @@ final class Installer
    if($db->all('SHOW TABLES')!==[])throw new HttpException(422,'Use an empty database. Legacy migration and in-place upgrades are not supported.');
    foreach(['data','data/uploads','data/cache'] as $d){$path=$this->root.'/'.$d;if(!is_dir($path)&&!mkdir($path,0700,true))throw new HttpException(422,'Private directories are not writable.');if(!is_writable($path))throw new HttpException(422,'Private directories are not writable.');}
    foreach(require $this->migrations.'/001_initial.php' as $sql)$db->run($sql);
+   foreach(glob($this->migrations.'/*.php') as $file){$v=basename($file,'.php');if($v==='001_initial')continue;$m=require $file;foreach($m['sql'] as $sql)$db->run($sql);foreach($m['checks'] as $check)if(!(bool)$db->run($check)->fetchColumn())throw new \RuntimeException('Migration check failed.');$db->run('INSERT INTO migrations(version) VALUES (?)',[$v]);}
    $db->run('INSERT INTO users(username,name,password_hash,role,audience) VALUES (?,?,?,?,?)',[$username,$name,password_hash($password,PASSWORD_DEFAULT),'administrator','staff']);
-   $config=['database'=>$databaseSettings,'key'=>base64_encode(random_bytes(32)),'upload_limit'=>20*1024*1024,'version'=>'2.0.0-alpha.3'];
+   $config=['database'=>$databaseSettings,'key'=>base64_encode(random_bytes(32)),'upload_limit'=>20*1024*1024,'version'=>'2.0.0-alpha.4'];
    $tmp=$this->root.'/data/config.tmp.php';file_put_contents($tmp,"<?php\nif (!defined('SIMPLEMSPDOC_BOOTSTRAP')) { http_response_code(404); exit; }\nreturn ".var_export($config,true).";\n",LOCK_EX);chmod($tmp,0600);if(!rename($tmp,$this->root.'/data/config.php'))throw new \RuntimeException('Cannot save configuration.');
    \SimpleMSPDoc\Core\ProtectedFile::write($this->root.'/data/installed.php',date(DATE_ATOM));chmod($this->root.'/data/installed.php',0600);
   }finally{flock($lock,LOCK_UN);fclose($lock);}

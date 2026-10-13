@@ -10,3 +10,5 @@ document.querySelectorAll('[data-rich-editor]').forEach(editor=>{
  editor.querySelector('.source-toggle').addEventListener('click',()=>{if(!sourceMode){source.value=surface.innerHTML;sourceMode=true;editor.classList.add('source-mode');editor.querySelector('.source-toggle').textContent='HTML source mode — save to apply formatting';source.focus();}else{source.focus();}});
  editor.closest('form').addEventListener('submit',()=>{if(!sourceMode)source.value=surface.innerHTML;});
 });
+
+document.querySelectorAll('[data-copy-secret]').forEach(button=>button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(document.getElementById(button.dataset.copySecret).textContent);button.textContent='Copied';}catch{button.textContent='Select the password to copy';}}));

@@ -38,7 +38,7 @@ jobs:
           TEST_DSN: mysql:host=127.0.0.1;port=3306;dbname=simplemspdoc_test;charset=utf8mb4
           TEST_DB_USER: root
           TEST_DB_PASSWORD: testing
-      - run: php scripts/build-release.php 2.0.0-alpha.3
+      - run: php scripts/build-release.php 2.0.0-alpha.4
       - uses: actions/upload-artifact@v4
         with:
           name: SimpleMSPDoc-php-${{ matrix.php }}-${{ strategy.job-index }}
@@ -50,7 +50,7 @@ jobs:
           sudo apt-get install -y apache2 libapache2-mod-php8.3 php8.3-mysql php8.3-mbstring php8.3-xml php8.3-zip
           sudo a2dismod rewrite || true
           sudo mkdir -p /var/www/simplemspdoc
-          sudo unzip -q dist/SimpleMSPDoc-2.0.0-alpha.3.zip -d /var/www/simplemspdoc
+          sudo unzip -q dist/SimpleMSPDoc-2.0.0-alpha.4.zip -d /var/www/simplemspdoc
           sudo chown -R www-data:www-data /var/www/simplemspdoc/data
           sudo cp tests/Browser/apache-ci.conf /etc/apache2/sites-available/simplemspdoc.conf
           sudo a2dissite 000-default

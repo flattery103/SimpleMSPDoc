@@ -1,18 +1,20 @@
-# SimpleMSPDoc 2.0.0-alpha.3
+# SimpleMSPDoc 2.0.0-alpha.4
 
 Self-hosted IT documentation for internal IT teams and managed service providers. Designed for quick access to organizations, locations, contacts, assets, and procedures on a standard LAMP server.
 
-## Compatibility notice — fresh installation only
+## Compatibility notice
 
-**This rebuild is not backward-compatible with previous versions. It requires a fresh database. No legacy migration or in-place upgrade is provided.**
+**This rebuild is not backward-compatible with legacy SimpleMSPDoc versions. New installations require an empty database; no legacy migration is provided. Installed rebuild alpha.2/alpha.3 systems can update to alpha.4 through Database upgrades.**
 
-Keep any previous SimpleMSPDoc deployment separate. Back up its database and uploaded files. Do not overwrite the previous installation or point this rebuild at its database.
+Keep any legacy SimpleMSPDoc deployment separate. Back up its database and uploaded files. Do not overwrite the previous installation or point this rebuild at its database.
 
 This branch is an **alpha rebuild**, not a production release. Review the validation notes and test it with nonproduction documentation first. Future releases of the rebuilt application use tracked database migrations; that does not provide migration from the legacy application.
 
 ## Features
 
-- Multiple organizations, locations, contacts, and assets
+- Multiple organizations with persistent navigation, logos, website, phone, address, and notes
+- Configurations (assets), locations, contacts, and documents
+- Encrypted organization passwords, optionally linked to configurations; audited reveal without a separate vault login
 - Shared asset templates with text, multiline, numeric, date, boolean, URL, and choice fields
 - Rich-text articles, categories, tags, revision history, side-by-side comparison, and restore
 - Private attachments and related-record links
@@ -23,7 +25,7 @@ This branch is an **alpha rebuild**, not a production release. Review the valida
 - Administrator audit history and reversible record/organization archiving
 - Web installer and administrator-controlled database upgrades
 
-A password vault and active Meraki/Microsoft 365 integrations are not included. Connector contracts are reserved for future development.
+An additional vault login and active Meraki/Microsoft 365 integrations are not included. Connector contracts are reserved for future development.
 
 ## Requirements
 
@@ -45,7 +47,7 @@ Ubuntu Server 24.04 LTS is the reference deployment. End users install a release
 
 No terminal commands, Composer, Node.js or Apache rewrites are required on the installation server. No setup key or ownership verification is required. Setup locks after success.
 
-See [installation instructions](docs/installation.md), [update instructions](docs/upgrading.md), and [release notes](docs/release-notes.md). Alpha.2 requires a fresh installation rather than an overlay on alpha.1.
+See [installation instructions](docs/installation.md), [update instructions](docs/upgrading.md), and [release notes](docs/release-notes.md). Alpha.4 upgrades installed alpha.2/alpha.3 systems through Database upgrades; preserve data/ and the existing database. Alpha.1 requires a fresh installation.
 
 ## Validation status
 

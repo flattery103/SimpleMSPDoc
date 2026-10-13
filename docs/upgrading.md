@@ -1,9 +1,16 @@
-# Updates
+# Update to 2.0.0-alpha.4
 
-Alpha.2 introduces a flat install layout, rewrite-free routes, browser/file-manager setup verification, and guarded private-file storage. Use a fresh directory and database when moving from alpha.1; no alpha.1 data conversion is provided in this test release.
+## From alpha.2 or alpha.3
 
-For later releases that preserve this layout, back up the database and `data/`, replace application code during a maintenance window, preserve `data/`, and open **Database upgrades** as an administrator. The migration runner locks concurrent upgrades and tracks applied migrations.
+1. Back up the database and the entire `data/` directory before uploading the update.
+2. Extract the new ZIP over the existing website root. Preserve your existing `data/` directory, especially `data/config.php`, sessions and uploaded files. Do not delete it or replace its contents with an empty folder. The ZIP does not contain a configuration file.
+3. Sign in as an administrator. The application directs you to **Database upgrades**.
+4. Confirm your backup and click **Apply database updates**. Existing organizations, documentation, users and uploads remain intact. The additive migration creates organization details/logo fields and an encrypted password table. No reinstallation is needed.
 
-MySQL/MariaDB schema changes can commit implicitly. If a migration fails, maintenance remains active. Review the guarded `data/upgrade.log.php` through your hosting file manager, restore the application and database backup, and resolve the failure before retrying. Do not manually clear maintenance or migration records to force a retry.
+Keep the original `data/config.php` application key: it is needed to decrypt MFA secrets and stored passwords. Back up the database and configuration together.
 
-Legacy SimpleMSPDoc versions remain incompatible and have no migration path.
+MySQL/MariaDB schema changes can commit implicitly. If an upgrade fails, maintenance remains active. Review `data/upgrade.log.php` through your hosting file manager and restore the database and application backup before retrying. Do not manually clear maintenance or migration records to force a retry.
+
+## From alpha.1 or the legacy application
+
+The old layout and legacy application remain incompatible. Use a clean directory and fresh database; no migration from those versions is provided.

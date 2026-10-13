@@ -1,4 +1,4 @@
-# Install SimpleMSPDoc 2.0.0-alpha.3
+# Install SimpleMSPDoc 2.0.0-alpha.4
 
 No command-line access or Apache rewrite rules are required.
 
@@ -35,8 +35,8 @@ Set PHP upload_max_filesize to20M and post_max_size to22M through your hosting p
 
 ## Compatibility and backups
 
-This rebuild is not backward-compatible with previous versions. There is no legacy migration. Install into a clean directory and use a new database. Since alpha.2 changes both layout and private-file storage, do not overlay it onto alpha.1 or reuse an installed alpha.1 data directory.
+This rebuild is not backward-compatible with previous versions. There is no legacy migration. Install into a clean directory and use a new database. Alpha.4 can update alpha.2/alpha.3 through the database upgrade page; see upgrading.md. Alpha.1 layout/storage and legacy versions require a fresh installation.
 
-Back up the database, the entire `data/` folder and the application release. `data/config.php` contains the application key needed for MFA. Attachments are stored with a PHP guard; restore or export them through the application, rather than treating stored files as ordinary downloaded documents.
+Back up the database, the entire `data/` folder and the application release. `data/config.php` contains the application key needed for MFA and encrypted passwords. Attachments are stored with a PHP guard; restore or export them through the application, rather than treating stored files as ordinary downloaded documents.
 
 This is an alpha for a separate test installation. PHP8.3/MariaDB10.11 and HTTP file protection are tested locally. The actual Apache runtime, wider version matrix and visual browser checks remain pending.
