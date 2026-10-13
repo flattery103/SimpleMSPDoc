@@ -1,4 +1,4 @@
-# SimpleMSPDoc 2.0.0-alpha.2
+# SimpleMSPDoc 2.0.0-alpha.3
 
 Self-hosted IT documentation for internal IT teams and managed service providers. Designed for quick access to organizations, locations, contacts, assets, and procedures on a standard LAMP server.
 
@@ -21,7 +21,7 @@ This branch is an **alpha rebuild**, not a production release. Review the valida
 - Internal-only records by default; explicit client-visible sharing
 - Authenticator MFA, recovery codes, login throttling, and administrator MFA requirements
 - Administrator audit history and reversible record/organization archiving
-- Browser/file-manager-protected web installer and administrator-controlled database upgrades
+- Web installer and administrator-controlled database upgrades
 
 A password vault and active Meraki/Microsoft 365 integrations are not included. Connector contracts are reserved for future development.
 
@@ -40,10 +40,10 @@ Ubuntu Server 24.04 LTS is the reference deployment. End users install a release
 1. Extract the install ZIP directly into the website root, for example `/www/SimpleMSPDoc`.
 2. Set DocumentRoot to that directory. There is no public/ directory or version-directory wrapper.
 3. Make data/ writable by PHP using your hosting file manager.
-4. Open the website. Download the setup file, upload it into data/ using FTP or your hosting file manager, and refresh setup.
+4. Open the website to access the database and administrator setup form.
 5. Enter the database details and administrator account in the browser installer.
 
-No terminal commands, Composer, Node.js or Apache rewrites are required on the installation server. The browser supplies all setup instructions; no token copying is needed. Setup locks after success.
+No terminal commands, Composer, Node.js or Apache rewrites are required on the installation server. No setup key or ownership verification is required. Setup locks after success.
 
 See [installation instructions](docs/installation.md), [update instructions](docs/upgrading.md), and [release notes](docs/release-notes.md). Alpha.2 requires a fresh installation rather than an overlay on alpha.1.
 

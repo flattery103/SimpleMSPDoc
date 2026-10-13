@@ -7,11 +7,7 @@ def get(path):
 def post(path,data):
  with client.open(urllib.request.Request(url(path),data=urllib.parse.urlencode(data).encode()),timeout=10) as r:return r.read().decode()
 def csrf(body):return re.search(r'name="_csrf" value="([a-f0-9]+)"',body).group(1)
-body=get('/install');assert 'Download setup file' in body
-key=post('/install/setup-file',{'_csrf':csrf(body)})
-# Simulate owner uploading the downloaded file; no server command is part of setup.
-with open(os.environ['INSTALL_ROOT']+'/data/setup.key','w') as f:f.write(key)
-body=get('/install');assert 'Website access verified' in body
+body=get('/install');assert 'name="database_host"' in body;assert 'setup.key' not in body
 body=post('/install',{'_csrf':csrf(body),'database_host':'127.0.0.1','database_port':'3306','database_name':'simplemspdoc_apache_test','database_user':'root','database_password':'testing','username':'admin','name':'Apache Test','password':'Correct-password-123'})
 assert 'Sign in' in body
 body=post('/login',{'_csrf':csrf(body),'username':'admin','password':'Correct-password-123'});assert 'Organizations' in body

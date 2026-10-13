@@ -15,7 +15,7 @@ final class Application
    Session::start(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off',$url->base?:'/',$sessionPath);
    $path='/';if(isset($_GET['route'])){if(!is_string($_GET['route'])||strlen($_GET['route'])>500||!str_starts_with($_GET['route'],'/'))throw new HttpException(422,'Invalid page route.');$path=$_GET['route'];}else{$path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH)?:'/';if($url->base!==''&&str_starts_with($path,$url->base.'/'))$path=substr($path,strlen($url->base));if($path==='/index.php')$path='/';}
    $ctx->route=$path;$method=$_SERVER['REQUEST_METHOD'];
-   if(!is_file($this->privateRoot.'/data/config.php')){if(!in_array($path,['/install','/install/setup-file'],true))$ctx->redirect('/install');if($method==='POST')Csrf::verify();(new InstallController($ctx))->handle($path);return;}
+   if(!is_file($this->privateRoot.'/data/config.php')){if($path!=='/install')$ctx->redirect('/install');if($method==='POST')Csrf::verify();(new InstallController($ctx))->handle($path);return;}
    if($path==='/install')throw new HttpException(403,'Installation is locked.');
    $ctx->config=Config::load($this->privateRoot.'/data/config.php')->data;$ctx->db=Database::connect($ctx->config['database']);$ctx->db->run("SET time_zone='+00:00'");$ctx->audit=new \SimpleMSPDoc\Modules\Audit\AuditService($ctx->db);
    if(isset($_SESSION['user_id'])){$u=$ctx->db->one('SELECT * FROM users WHERE id=? AND active=1',[$_SESSION['user_id']]);if(!$u||(int)$u['session_version']!==(int)($_SESSION['session_version']??0)||time()-(int)($_SESSION['last_seen']??0)>1800){Session::logout();}else{$ctx->user=$u;$ctx->actor=Actor::from($u);$_SESSION['last_seen']=time();}}

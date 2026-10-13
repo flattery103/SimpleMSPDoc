@@ -1,6 +1,6 @@
 # Alpha.2 installation changes
 
-The ZIP root is the website root. It contains index.php, assets/, app/, data/, and docs/. Routes use index.php?route=... without rewrites. Installer access is proved by downloading setup.key in the browser and uploading it into data/ via file manager/FTP, without command-line access or token copying.
+The ZIP root is the website root. It contains index.php, assets/, app/, data/, and docs/. Routes use index.php?route=... without rewrites. The installer opens directly to the database and administrator form, without a setup key or ownership verification.
 
 Private configuration, session records, uploads, and logs are PHP-guarded; direct HTTP requests return404 even without .htaccess. The installer file includes a hash, not the raw browser secret. Downloading it does not authorize installation until an owner uploads it into data/.
 

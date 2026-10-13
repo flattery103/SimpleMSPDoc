@@ -5,8 +5,8 @@ use SimpleMSPDoc\Core\{Database,HttpException};
 final class Installer
 {
  public function __construct(private string $root,private string $migrations){}
- public function install(array $databaseSettings,array $adminInput,string $setupToken): void {
-  if(is_file($this->root.'/data/config.php')||is_file($this->root.'/data/installed.php')||!(new SetupAccess($this->root))->verify($setupToken))throw new HttpException(403,'Setup is locked or the browser setup verification is missing.');
+ public function install(array $databaseSettings,array $adminInput): void {
+  if(is_file($this->root.'/data/config.php')||is_file($this->root.'/data/installed.php'))throw new HttpException(403,'Installation is locked.');
   if(in_array(false,Requirements::check(),true))throw new HttpException(422,'Server requirements are not satisfied.');
   $username=strtolower(trim((string)($adminInput['username']??'')));$name=trim((string)($adminInput['name']??''));$password=(string)($adminInput['password']??'');
   if(!preg_match('/^[a-z0-9@._+-]{3,190}$/',$username)||$name===''||strlen($name)>190||strlen($password)<12||strlen($password)>72)throw new HttpException(422,'Enter a valid username, name, and a password of 12–72 bytes.');
@@ -19,9 +19,9 @@ final class Installer
    foreach(['data','data/uploads','data/cache'] as $d){$path=$this->root.'/'.$d;if(!is_dir($path)&&!mkdir($path,0700,true))throw new HttpException(422,'Private directories are not writable.');if(!is_writable($path))throw new HttpException(422,'Private directories are not writable.');}
    foreach(require $this->migrations.'/001_initial.php' as $sql)$db->run($sql);
    $db->run('INSERT INTO users(username,name,password_hash,role,audience) VALUES (?,?,?,?,?)',[$username,$name,password_hash($password,PASSWORD_DEFAULT),'administrator','staff']);
-   $config=['database'=>$databaseSettings,'key'=>base64_encode(random_bytes(32)),'upload_limit'=>20*1024*1024,'version'=>'2.0.0-alpha.2'];
+   $config=['database'=>$databaseSettings,'key'=>base64_encode(random_bytes(32)),'upload_limit'=>20*1024*1024,'version'=>'2.0.0-alpha.3'];
    $tmp=$this->root.'/data/config.tmp.php';file_put_contents($tmp,"<?php\nif (!defined('SIMPLEMSPDOC_BOOTSTRAP')) { http_response_code(404); exit; }\nreturn ".var_export($config,true).";\n",LOCK_EX);chmod($tmp,0600);if(!rename($tmp,$this->root.'/data/config.php'))throw new \RuntimeException('Cannot save configuration.');
-   \SimpleMSPDoc\Core\ProtectedFile::write($this->root.'/data/installed.php',date(DATE_ATOM));chmod($this->root.'/data/installed.php',0600);unlink($this->root.'/data/setup.key');
+   \SimpleMSPDoc\Core\ProtectedFile::write($this->root.'/data/installed.php',date(DATE_ATOM));chmod($this->root.'/data/installed.php',0600);
   }finally{flock($lock,LOCK_UN);fclose($lock);}
  }
 }

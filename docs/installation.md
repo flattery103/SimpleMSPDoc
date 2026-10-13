@@ -1,4 +1,4 @@
-# Install SimpleMSPDoc 2.0.0-alpha.2
+# Install SimpleMSPDoc 2.0.0-alpha.3
 
 No command-line access or Apache rewrite rules are required.
 
@@ -19,19 +19,11 @@ Set the website's DocumentRoot to that same directory. On hosting accounts, uplo
 
 Visit the website URL or server IP. The installer opens automatically through `index.php?route=/install`. If your server does not select index.php as its default page, open `http://SERVER-IP/index.php` directly. No `.htaccess` support or mod_rewrite is needed for application routes.
 
-## Verify website access
-
-1. Click **Download setup file** in the installer.
-2. Upload the downloaded `setup.key` file into the `data` folder using your hosting file manager or FTP.
-3. Keep the same browser window open and click **Refresh setup**.
-
-You do not need to open the file, copy a token, or run a server command. The file proves that the person running setup can manage this website's files. Downloading alone does not grant installation access. If you switch browsers or lose your session, download and upload a fresh file.
-
 ## Complete setup
 
 Create a new, empty database through your hosting control panel. Enter its host, port, database name, username and password in the installer. Then enter your administrator name, username and password and click **Install SimpleMSPDoc**.
 
-Setup locks automatically and consumes the uploaded setup file. Sign in, enable authenticator MFA and save your recovery codes, then create organizations and user accounts.
+Setup locks automatically after installation. No setup key or ownership verification is required. Sign in, enable authenticator MFA and save your recovery codes, then create organizations and user accounts.
 
 ## Requirements
 
