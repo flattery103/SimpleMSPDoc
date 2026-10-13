@@ -1,0 +1,1 @@
+<div class="card"><p>Enter your authenticator code or one of your recovery codes.</p><?php if(isset($error)): ?><div class="notice error"><?= $e($error) ?></div><?php endif; ?><form method="post" action="<?= $link('/mfa') ?>"><?= $csrf ?><label>Code<input name="code" autocomplete="one-time-code" required autofocus></label><button class="button">Verify</button></form></div>

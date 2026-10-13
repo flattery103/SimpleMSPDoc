@@ -1,0 +1,1 @@
+<div class="card"><p class="notice error" role="alert"><?= $e($message) ?></p><p>Return to the form or reload the current page to try again.</p><a class="button secondary" href="<?= $link('/') ?>">Back to workspace</a></div>
