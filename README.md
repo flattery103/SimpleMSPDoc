@@ -1,4 +1,4 @@
-# SimpleMSPDoc 2.0 rebuild
+# SimpleMSPDoc 2.0.0-alpha.2
 
 Self-hosted IT documentation for internal IT teams and managed service providers. Designed for quick access to organizations, locations, contacts, assets, and procedures on a standard LAMP server.
 
@@ -21,31 +21,31 @@ This branch is an **alpha rebuild**, not a production release. Review the valida
 - Internal-only records by default; explicit client-visible sharing
 - Authenticator MFA, recovery codes, login throttling, and administrator MFA requirements
 - Administrator audit history and reversible record/organization archiving
-- Token-protected web installer and administrator-controlled database upgrades
+- Browser/file-manager-protected web installer and administrator-controlled database upgrades
 
 A password vault and active Meraki/Microsoft 365 integrations are not included. Connector contracts are reserved for future development.
 
 ## Requirements
 
-- Apache 2.4 with rewrite support and PHP 8.3 or newer
+- Apache 2.4 and PHP 8.3 or newer; rewrite rules are not required
 - MySQL 8.0 or MariaDB 10.11 or newer
 - PHP extensions: PDO MySQL, mbstring, DOM, fileinfo, OpenSSL; zip for Office document attachments
 - HTTPS for deployed installations
-- Private writable configuration, session, cache, log, and upload directories outside the public webroot
+- A PHP-writable data folder; private files use PHP guards and do not depend on .htaccess
 
 Ubuntu Server 24.04 LTS is the reference deployment. End users install a release ZIP with bundled PHP libraries and frontend assets; Composer, Node.js, Docker, and internet-hosted UI dependencies are unnecessary on the application server.
 
 ## Installation
 
-1. Download and extract a built release ZIP into a new application directory.
-2. Set Apache's DocumentRoot to its `public/` subdirectory. Never serve the application root.
-3. Create an empty database and an application database user.
-4. Give the PHP service user write access to `config/` and `var/` only.
-5. Generate a setup token with `sudo -u www-data php scripts/setup-token.php` from the application directory.
-6. Open `/install` over HTTPS and enter the token, database settings, and first administrator.
-7. Sign in, configure MFA, create organizations, and assign users.
+1. Extract the install ZIP directly into the website root, for example `/www/SimpleMSPDoc`.
+2. Set DocumentRoot to that directory. There is no public/ directory or version-directory wrapper.
+3. Make data/ writable by PHP using your hosting file manager.
+4. Open the website. Download the setup file, upload it into data/ using FTP or your hosting file manager, and refresh setup.
+5. Enter the database details and administrator account in the browser installer.
 
-The installer locks itself automatically. See [installation instructions](docs/installation.md), [upgrade instructions](docs/upgrading.md), and [developer instructions](docs/development.md).
+No terminal commands, Composer, Node.js or Apache rewrites are required on the installation server. The browser supplies all setup instructions; no token copying is needed. Setup locks after success.
+
+See [installation instructions](docs/installation.md), [update instructions](docs/upgrading.md), and [release notes](docs/release-notes.md). Alpha.2 requires a fresh installation rather than an overlay on alpha.1.
 
 ## Validation status
 

@@ -6,13 +6,13 @@ PHP 8.3 and Composer are required. Production runtime libraries are pinned in `c
 composer install
 ```
 
-The web entry directory is `public/`. Keep private configuration and storage outside that directory. The development server can be started with:
+The development entry file is index.php. The built ZIP places code/libraries in app/ and guarded storage in data/. The development server can be started with:
 
 ```bash
-php -S 127.0.0.1:8080 -t public public/router.php
+php -S 127.0.0.1:8080 -t .
 ```
 
-Generate a setup token and complete the web installer against an empty development database. `SIMPLEMSPDOC_PRIVATE_ROOT` can point at a separate directory containing `config/` and `var/`. This is also used by integration tests. `SIMPLEMSPDOC_BASE_PATH` configures the development router's subpath; production Apache resolves the base path from its script name.
+Use the browser installer and upload its downloaded setup.key into data/ to verify file access. `SIMPLEMSPDOC_PRIVATE_ROOT` can point at a separate directory containing data/. This is also used by integration tests. The base path is detected from index.php; the HTTP suite tests a subdirectory mount without a router.
 
 ## Tests
 
@@ -32,10 +32,10 @@ CI targets PHP 8.3/8.4/8.5 and both MySQL 8.0/MariaDB 10.11. Compatibility beyon
 ## Build
 
 ```bash
-php scripts/build-release.php 2.0.0-alpha.1
+php scripts/build-release.php 2.0.0-alpha.2
 ```
 
-The build installs production dependencies into temporary staging, bundles local assets and license files, and writes `dist/SimpleMSPDoc-2.0.0-alpha.1.zip`. It excludes test tools, legacy scripts, local configuration, and user storage. `COMPOSER_BINARY` can name the Composer executable when it is not on PATH. A source checkout is not an installable release package until the production vendor dependencies have been built.
+The build installs production dependencies into temporary staging, bundles local assets and license files, and writes `dist/SimpleMSPDoc-2.0.0-alpha.2.zip`. It excludes test tools, legacy scripts, local configuration, and user storage. `COMPOSER_BINARY` can name the Composer executable when it is not on PATH. A source checkout is not an installable release package until the production vendor dependencies have been built.
 
 ## Extension boundary
 

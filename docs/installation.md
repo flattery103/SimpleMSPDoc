@@ -1,80 +1,50 @@
-# Install SimpleMSPDoc
+# Install SimpleMSPDoc 2.0.0-alpha.2
 
-## Compatibility
+No command-line access or Apache rewrite rules are required.
 
-This rebuild is not backward-compatible with previous versions. Use a new, empty database and a separate installation directory. There is no legacy migration or in-place upgrade.
+## Upload
 
-## Server preparation
+Extract the contents of the install ZIP directly into the website directory, for example `/www/SimpleMSPDoc`. Its root contains `index.php`, `assets/`, `app/`, `data/`, and `docs/`; there is no enclosing version directory or `public/` folder.
 
-On Ubuntu 24.04 LTS, install Apache, PHP, and the database server:
+Set the website's DocumentRoot to that same directory. On hosting accounts, upload directly into the document root provided by your hosting service. Use the hosting file manager to ensure PHP can write to `data/`. Application files can remain read-only.
 
-```bash
-sudo apt update
-sudo apt install apache2 php libapache2-mod-php php-mysql php-mbstring php-xml php-zip mariadb-server unzip
-sudo a2enmod rewrite
-```
+| Folder | Purpose |
+| --- | --- |
+| assets | Styles and browser scripts |
+| app | Bundled application code and libraries |
+| data | Protected settings, sessions, uploads and diagnostic logs |
+| docs | Installation and reference documentation |
 
-MySQL 8.0 is also supported as a database baseline. Keep distribution security updates installed. Composer is not required for release ZIP installations.
+## Open the website
 
-Extract a built release to `/var/www/simplemspdoc`. The ZIP contains production vendor dependencies. A GitHub-generated source ZIP is not the built release ZIP.
+Visit the website URL or server IP. The installer opens automatically through `index.php?route=/install`. If your server does not select index.php as its default page, open `http://SERVER-IP/index.php` directly. No `.htaccess` support or mod_rewrite is needed for application routes.
 
-```bash
-sudo mkdir -p /var/www/simplemspdoc/config /var/www/simplemspdoc/var
-sudo chown -R www-data:www-data /var/www/simplemspdoc/config /var/www/simplemspdoc/var
-sudo chmod 750 /var/www/simplemspdoc/config /var/www/simplemspdoc/var
-```
+## Verify website access
 
-Keep application code owned by the deployment administrator and readable by PHP. Only `config/` and `var/` need to be writable by PHP. Run the token command as the same user that runs PHP so the installer can read its private token file.
+1. Click **Download setup file** in the installer.
+2. Upload the downloaded `setup.key` file into the `data` folder using your hosting file manager or FTP.
+3. Keep the same browser window open and click **Refresh setup**.
 
-## Database
+You do not need to open the file, copy a token, or run a server command. The file proves that the person running setup can manage this website's files. Downloading alone does not grant installation access. If you switch browsers or lose your session, download and upload a fresh file.
 
-Create an empty UTF-8 database and a user restricted to it. Replace the sample password:
+## Complete setup
 
-```sql
-CREATE DATABASE simplemspdoc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'simplemspdoc'@'localhost' IDENTIFIED BY 'REPLACE_WITH_A_UNIQUE_PASSWORD';
-GRANT ALL PRIVILEGES ON simplemspdoc.* TO 'simplemspdoc'@'localhost';
-```
+Create a new, empty database through your hosting control panel. Enter its host, port, database name, username and password in the installer. Then enter your administrator name, username and password and click **Install SimpleMSPDoc**.
 
-Schema installation/upgrades need DDL privileges on this application database. Do not use a database root account for the application.
+Setup locks automatically and consumes the uploaded setup file. Sign in, enable authenticator MFA and save your recovery codes, then create organizations and user accounts.
 
-## Apache
+## Requirements
 
-Example vhost; configure your TLS certificate using your preferred tooling:
+Apache 2.4, PHP 8.3+, MySQL 8.0 or MariaDB 10.11+. PHP needs PDO MySQL, mbstring, DOM, fileinfo and OpenSSL; Office attachments also need zip. Use HTTPS for deployed installations. With a TLS proxy, ensure the hosting configuration tells PHP that HTTPS is active; arbitrary forwarded headers are not trusted.
 
-```apache
-<VirtualHost *:80>
-    ServerName docs.example.com
-    DocumentRoot /var/www/simplemspdoc/public
-    <Directory /var/www/simplemspdoc/public>
-        Options -Indexes
-        AllowOverride All
-        Require all granted
-    </Directory>
-    ErrorLog ${APACHE_LOG_DIR}/simplemspdoc-error.log
-    CustomLog ${APACHE_LOG_DIR}/simplemspdoc-access.log combined
-</VirtualHost>
-```
+For a manually configured Apache site, use the application root as DocumentRoot and set `DirectoryIndex index.php`. `Require all granted` must permit that directory. `AllowOverride None` is supported; rewrite rules are unnecessary. The included `.htaccess` files add optional directory protections when overrides are enabled, but private files also have PHP guards that return404 when requested directly.
 
-Enable the vhost and configure HTTPS before entering credentials. PHP must see HTTPS as active for secure session cookies. With a TLS-terminating reverse proxy, configure Apache's trusted proxy handling to set the HTTPS environment correctly; the application does not trust arbitrary forwarded headers.
+Set PHP upload_max_filesize to20M and post_max_size to22M through your hosting panel if you want the full default20MiB attachment limit. The installer reports missing runtime requirements; if data is not writable, adjust it through your hosting file manager or ask the hosting provider.
 
-For a subdirectory deployment, use an Apache Alias to `public/`, with the same Directory permissions. Do not alias the entire application directory. The UI detects the base path from the entry script.
+## Compatibility and backups
 
-Set PHP `upload_max_filesize = 20M` and `post_max_size = 22M` if you want the full default 20 MiB attachment limit. Restart Apache after changing PHP settings. Files are downloaded as attachments; scripts, HTML, SVG and macro-enabled Office documents are rejected. Office attachments require PHP zip.
+This rebuild is not backward-compatible with previous versions. There is no legacy migration. Install into a clean directory and use a new database. Since alpha.2 changes both layout and private-file storage, do not overlay it onto alpha.1 or reuse an installed alpha.1 data directory.
 
-## Web setup
+Back up the database, the entire `data/` folder and the application release. `data/config.php` contains the application key needed for MFA. Attachments are stored with a PHP guard; restore or export them through the application, rather than treating stored files as ordinary downloaded documents.
 
-```bash
-cd /var/www/simplemspdoc
-sudo -u www-data php scripts/setup-token.php
-```
-
-Open `https://docs.example.com/install`. Enter the printed one-time token, empty database connection, administrator name, username, and a 12–72 byte password. The setup token is consumed and the installer is permanently locked after installation. If you lose an unused token, delete only `var/setup-token` and generate another. Do not remove install locks from an installed application.
-
-A partial installation is not retried against a partly populated database. After diagnosing the private logs, use a new empty database and remove incomplete local configuration only if the application has never completed installation.
-
-Enable MFA for the administrator and save the recovery codes. Then create organizations, asset templates, and staff/client users. Client accounts must be read-only. Records default to internal-only; explicitly mark records client-visible when ready to share them.
-
-## Backups
-
-Back up the application database, `config/local.php`, and all of `var/`. The application key in `config/local.php` is needed to decrypt MFA secrets. Store backups privately. For upgrades, keep the previous application release too. Restore-test backups before depending on the software for operational documentation.
+This is an alpha for a separate test installation. PHP8.3/MariaDB10.11 and HTTP file protection are tested locally. The actual Apache runtime, wider version matrix and visual browser checks remain pending.

@@ -32,13 +32,13 @@ jobs:
           coverage: none
       - run: composer install --no-interaction --prefer-dist
       - name: PHP syntax
-        run: find src public templates database scripts tests -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find index.php src templates database scripts tests -name '*.php' -print0 | xargs -0 -n1 php -l
       - run: composer test
         env:
           TEST_DSN: mysql:host=127.0.0.1;port=3306;dbname=simplemspdoc_test;charset=utf8mb4
           TEST_DB_USER: root
           TEST_DB_PASSWORD: testing
-      - run: php scripts/build-release.php 2.0.0-alpha.1
+      - run: php scripts/build-release.php 2.0.0-alpha.2
       - uses: actions/upload-artifact@v4
         with:
           name: SimpleMSPDoc-php-${{ matrix.php }}-${{ strategy.job-index }}
@@ -48,18 +48,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y apache2 libapache2-mod-php8.3 php8.3-mysql php8.3-mbstring php8.3-xml php8.3-zip
-          sudo a2enmod rewrite
+          sudo a2dismod rewrite || true
           sudo mkdir -p /var/www/simplemspdoc
-          sudo unzip -q dist/SimpleMSPDoc-2.0.0-alpha.1.zip -d /var/www/simplemspdoc
-          sudo chown -R www-data:www-data /var/www/simplemspdoc/SimpleMSPDoc-2.0.0-alpha.1/config /var/www/simplemspdoc/SimpleMSPDoc-2.0.0-alpha.1/var
+          sudo unzip -q dist/SimpleMSPDoc-2.0.0-alpha.2.zip -d /var/www/simplemspdoc
+          sudo chown -R www-data:www-data /var/www/simplemspdoc/data
           sudo cp tests/Browser/apache-ci.conf /etc/apache2/sites-available/simplemspdoc.conf
           sudo a2dissite 000-default
           sudo a2ensite simplemspdoc
           sudo apache2ctl configtest
           sudo systemctl restart apache2
           php -r '$p=new PDO("mysql:host=127.0.0.1;port=3306","root","testing");$p->exec("CREATE DATABASE simplemspdoc_apache_test CHARACTER SET utf8mb4");'
-          sudo -u www-data php /var/www/simplemspdoc/SimpleMSPDoc-2.0.0-alpha.1/scripts/setup-token.php > /tmp/simplemspdoc-setup-token
-          BASE_URL=http://127.0.0.1 SETUP_TOKEN_FILE=/tmp/simplemspdoc-setup-token python3 tests/Browser/apache-smoke.py
+          sudo env BASE_URL=http://127.0.0.1 INSTALL_ROOT=/var/www/simplemspdoc python3 tests/Browser/apache-smoke.py
       - name: Browser acceptance
         if: matrix.php == '8.3' && matrix.database == 'mariadb:10.11'
         run: |

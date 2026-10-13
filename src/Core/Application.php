@@ -10,13 +10,14 @@ final class Application
  public function handle(): void {
   $url=new Url($_SERVER['SCRIPT_NAME']??'/index.php');$ctx=new Context($this->codeRoot,$this->privateRoot,$url);
   header('X-Content-Type-Options: nosniff');header('Referrer-Policy: same-origin');header('X-Frame-Options: DENY');header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'; base-uri 'self'");header('Cache-Control: no-store');
-  $sessionPath=$this->privateRoot.'/var/sessions';if(!is_dir($sessionPath))mkdir($sessionPath,0700,true);session_save_path($sessionPath);
-  Session::start(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off',$url->base?:'/');
   try {
-   $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH)?:'/';if($url->base!==''&&str_starts_with($path,$url->base))$path=substr($path,strlen($url->base))?:'/';$method=$_SERVER['REQUEST_METHOD'];
-   if(!is_file($this->privateRoot.'/config/local.php')){if($path!=='/install')$ctx->redirect('/install');if($method==='POST')Csrf::verify();(new InstallController($ctx))->handle();return;}
+   $sessionPath=$this->privateRoot.'/data/sessions';if(!is_dir($sessionPath)&&!@mkdir($sessionPath,0700,true))throw new HttpException(503,'Give PHP write access to the data folder using your hosting file manager, then reload.');
+   Session::start(!empty($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=='off',$url->base?:'/',$sessionPath);
+   $path='/';if(isset($_GET['route'])){if(!is_string($_GET['route'])||strlen($_GET['route'])>500||!str_starts_with($_GET['route'],'/'))throw new HttpException(422,'Invalid page route.');$path=$_GET['route'];}else{$path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH)?:'/';if($url->base!==''&&str_starts_with($path,$url->base.'/'))$path=substr($path,strlen($url->base));if($path==='/index.php')$path='/';}
+   $ctx->route=$path;$method=$_SERVER['REQUEST_METHOD'];
+   if(!is_file($this->privateRoot.'/data/config.php')){if(!in_array($path,['/install','/install/setup-file'],true))$ctx->redirect('/install');if($method==='POST')Csrf::verify();(new InstallController($ctx))->handle($path);return;}
    if($path==='/install')throw new HttpException(403,'Installation is locked.');
-   $ctx->config=Config::load($this->privateRoot.'/config/local.php')->data;$ctx->db=Database::connect($ctx->config['database']);$ctx->db->run("SET time_zone='+00:00'");$ctx->audit=new \SimpleMSPDoc\Modules\Audit\AuditService($ctx->db);
+   $ctx->config=Config::load($this->privateRoot.'/data/config.php')->data;$ctx->db=Database::connect($ctx->config['database']);$ctx->db->run("SET time_zone='+00:00'");$ctx->audit=new \SimpleMSPDoc\Modules\Audit\AuditService($ctx->db);
    if(isset($_SESSION['user_id'])){$u=$ctx->db->one('SELECT * FROM users WHERE id=? AND active=1',[$_SESSION['user_id']]);if(!$u||(int)$u['session_version']!==(int)($_SESSION['session_version']??0)||time()-(int)($_SESSION['last_seen']??0)>1800){Session::logout();}else{$ctx->user=$u;$ctx->actor=Actor::from($u);$_SESSION['last_seen']=time();}}
    if(isset($_SESSION['pending_id'])&&time()-(int)($_SESSION['pending_at']??0)>600)Session::logout();
    if($method==='POST')Csrf::verify();
@@ -36,6 +37,6 @@ final class Application
     $r->addRoute('GET','/templates',[$templates,'index']);$r->addRoute('POST','/templates/save',[$templates,'save']);$r->addRoute('GET','/templates/{id:\d+}',[$templates,'show']);$r->addRoute('POST','/templates/{id:\d+}/fields',[$templates,'addField']);$r->addRoute('POST','/template-fields/{id:\d+}/archive',[$templates,'archiveField']);
     $r->addRoute('GET','/search',[new SearchController($ctx),'index']);$r->addRoute('GET','/audit',[new AuditController($ctx),'index']);$r->addRoute(['GET','POST'],'/upgrade',[new UpgradeController($ctx),'index']);
    });$route=$dispatcher->dispatch($method,$path);if($route[0]===\FastRoute\Dispatcher::NOT_FOUND)throw new HttpException(404,'Page not found.');if($route[0]===\FastRoute\Dispatcher::METHOD_NOT_ALLOWED)throw new HttpException(405,'Method not allowed.');($route[1])($route[2]);
-  }catch(\Throwable $error){if(!$error instanceof HttpException){$log=$this->privateRoot.'/var/logs';if(!is_dir($log))mkdir($log,0700,true);file_put_contents($log.'/application.log',gmdate(DATE_ATOM).' '.get_class($error).' code='.$error->getCode().' file='.$error->getFile().' line='.$error->getLine().PHP_EOL,FILE_APPEND|LOCK_EX);}$ctx->render('error',['title'=>'Request could not be completed','message'=>ErrorHandler::message($error)],$error instanceof HttpException?$error->status:500);}
+  }catch(\Throwable $error){if(!$error instanceof HttpException){ProtectedFile::write($this->privateRoot.'/data/application.log.php',gmdate(DATE_ATOM).' '.get_class($error).' code='.$error->getCode().' file='.$error->getFile().' line='.$error->getLine().PHP_EOL,true);}$ctx->render('error',['title'=>'Request could not be completed','message'=>ErrorHandler::message($error)],$error instanceof HttpException?$error->status:500);}
  }
 }

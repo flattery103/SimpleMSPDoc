@@ -6,7 +6,7 @@ use SimpleMSPDoc\Modules\Audit\AuditService;
 use SimpleMSPDoc\Modules\Installation\{MigrationRunner,Maintenance};
 final class UpgradeTest extends DatabaseTestCase
 {
- private function runner(): MigrationRunner {mkdir($this->root.'/migrations');return new MigrationRunner($this->db,new AuditService($this->db),$this->root.'/migrations',$this->root.'/var');}
+ private function runner(): MigrationRunner {mkdir($this->root.'/migrations');return new MigrationRunner($this->db,new AuditService($this->db),$this->root.'/migrations',$this->root.'/data');}
  public function testBackupRequiredAndSuccessfulMigrationsNotRepeated(): void {
   $this->schema();$a=new Actor($this->user(),'administrator','staff');$r=$this->runner();file_put_contents($this->root.'/migrations/002_example.php',"<?php return ['sql'=>['CREATE TABLE example(id INT)'],'checks'=>['SELECT COUNT(*)=1 FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name=\'example\'']];");
   try{$r->apply($a,false);self::fail('Backup acknowledgment missing');}catch(\SimpleMSPDoc\Core\HttpException $e){self::assertSame(422,$e->status);}

@@ -20,7 +20,7 @@ final class MigrationRunner
    foreach($definitions as $version=>$definition){foreach($definition['sql'] as $sql)$this->db->run($sql);foreach($definition['checks'] as $check)if(!(bool)$this->db->run($check)->fetchColumn())throw new \RuntimeException('Migration postcondition failed.');$this->db->run('INSERT INTO migrations(version) VALUES (?)',[$version]);$this->audit->record($actor,'upgrade.applied','migration',null,null,['version'=>$version]);}
    $maintenance->set(false);
   }catch(HttpException $e){throw $e;}catch(\Throwable $e){
-   if(!is_dir($this->privateDirectory.'/logs'))mkdir($this->privateDirectory.'/logs',0700,true);file_put_contents($this->privateDirectory.'/logs/upgrade.log',gmdate(DATE_ATOM).' migration='.$version.' exception='.get_class($e).' code='.$e->getCode().PHP_EOL,FILE_APPEND|LOCK_EX);
+   \SimpleMSPDoc\Core\ProtectedFile::write($this->privateDirectory.'/upgrade.log.php',gmdate(DATE_ATOM).' migration='.$version.' exception='.get_class($e).' code='.$e->getCode().PHP_EOL,true);
    throw new HttpException(503,'Upgrade failed. Maintenance remains active; restore your database and application backup before retrying.');
   }finally{$this->db->run('SELECT RELEASE_LOCK(?)',[$name]);}
  }
