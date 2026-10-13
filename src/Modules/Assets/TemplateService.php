@@ -24,7 +24,7 @@ final class TemplateService
   $this->db->transaction(function()use($actor,$fieldId,$typeId){
    $this->db->one('SELECT id FROM asset_types WHERE id=? FOR UPDATE',[$typeId]);$this->db->run('UPDATE asset_fields SET archived=1,required=0 WHERE id=?',[$fieldId]);
    $active=array_column($this->db->all('SELECT id FROM asset_fields WHERE asset_type_id=? AND archived=0 ORDER BY position,id',[$typeId]),'id');
-   $records=$this->db->all("SELECT id,payload FROM records WHERE type='asset' AND JSON_EXTRACT(payload,'$.template_id')=? FOR UPDATE",[$typeId]);
+   $records=$this->db->all("SELECT id,payload FROM records WHERE type='asset' AND CAST(JSON_UNQUOTE(JSON_EXTRACT(payload,'$.template_id')) AS UNSIGNED)=? FOR UPDATE",[$typeId]);
    foreach($records as $record){$payload=json_decode($record['payload'],true,512,JSON_THROW_ON_ERROR);$this->db->run('UPDATE records SET search_text=? WHERE id=?',[AssetSearchText::build($payload,$active),$record['id']]);}
    $this->audit->record($actor,'template.field_archived','asset_field',$fieldId,null);
   });

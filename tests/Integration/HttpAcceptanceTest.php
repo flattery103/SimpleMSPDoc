@@ -8,6 +8,7 @@ final class HttpAcceptanceTest extends DatabaseTestCase
  private string $cookie;
  private string $prefix='';
  private function startServer(string $prefix='',?string $packagedRoot=null): void {
+  $debugDirectory=dirname(__DIR__,2).'/.superpowers';if(!is_dir($debugDirectory))mkdir($debugDirectory,0700,true);
   $this->prefix=$prefix;$port=random_int(21000,29000);$this->base='http://127.0.0.1:'.$port.$prefix;$this->cookie=$this->root.'/cookies';
   $env=array_merge(getenv(),['SIMPLEMSPDOC_PRIVATE_ROOT'=>$packagedRoot??$this->root,'SIMPLEMSPDOC_BASE_PATH'=>$prefix]);
   $docroot=$this->root.'/web';mkdir($docroot,0700,true);$site=$docroot.$prefix;if($prefix!=='')mkdir($site,0700,true);file_put_contents($site.'/index.php','<?php require '.var_export(dirname(__DIR__,2).'/index.php',true).';');symlink(dirname(__DIR__,2).'/assets',$site.'/assets');symlink($this->root.'/data',$site.'/data');if($packagedRoot!==null)$docroot=$packagedRoot;$this->server=proc_open([PHP_BINARY,'-c',php_ini_loaded_file(),'-S','127.0.0.1:'.$port,'-t',$docroot],[0=>['pipe','r'],1=>['file',$this->root.'/server.log','a'],2=>['file',$this->root.'/server.log','a']],$pipes,dirname(__DIR__,2),$env);
