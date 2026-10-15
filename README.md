@@ -1,10 +1,10 @@
-# SimpleMSPDoc 2.0.0-alpha.4
+# SimpleMSPDoc 2.0.0-alpha.7
 
 Self-hosted IT documentation for internal IT teams and managed service providers. Designed for quick access to organizations, locations, contacts, assets, and procedures on a standard LAMP server.
 
 ## Compatibility notice
 
-**This rebuild is not backward-compatible with legacy SimpleMSPDoc versions. New installations require an empty database; no legacy migration is provided. Installed rebuild alpha.2/alpha.3 systems can update to alpha.4 through Database upgrades.**
+**This rebuild is not backward-compatible with legacy SimpleMSPDoc versions. New installations require an empty database; no legacy migration is provided. Installed rebuild alpha.2–alpha.6 systems can update directly to alpha.7 through Database upgrades.**
 
 Keep any legacy SimpleMSPDoc deployment separate. Back up its database and uploaded files. Do not overwrite the previous installation or point this rebuild at its database.
 
@@ -25,7 +25,7 @@ This branch is an **alpha rebuild**, not a production release. Review the valida
 - Administrator audit history and reversible record/organization archiving
 - Web installer and administrator-controlled database upgrades
 
-An additional vault login and active Meraki/Microsoft 365 integrations are not included. Connector contracts are reserved for future development.
+The optional [Action1 add-on](docs/action1.md) imports managed devices into configurations with explicit organization mappings, encrypted credentials, and resumable browser-driven sync. It is disabled by default. An additional vault login and Meraki/Microsoft 365 integrations are not included.
 
 ## Requirements
 
@@ -47,7 +47,7 @@ Ubuntu Server 24.04 LTS is the reference deployment. End users install a release
 
 No terminal commands, Composer, Node.js or Apache rewrites are required on the installation server. No setup key or ownership verification is required. Setup locks after success.
 
-See [installation instructions](docs/installation.md), [update instructions](docs/upgrading.md), and [release notes](docs/release-notes.md). Alpha.4 upgrades installed alpha.2/alpha.3 systems through Database upgrades; preserve data/ and the existing database. Alpha.1 requires a fresh installation.
+See [installation instructions](docs/installation.md), [update instructions](docs/upgrading.md), and [release notes](docs/release-notes.md). Alpha.5 upgrades installed alpha.2/alpha.3/alpha.4 systems through Database upgrades; preserve data/ and the existing database. Alpha.1 requires a fresh installation.
 
 ## Validation status
 
@@ -56,3 +56,9 @@ The local suite exercises PHP 8.3 and MariaDB 10.11, including actual HTTP insta
 ## License
 
 GNU GPL v3 or later, continuing the original project's license. Bundled dependencies retain their respective licenses.
+
+Configuration lists support per-user column choices. Standard configuration details include serial number, type, manufacturer/model, system specifications, MAC address and purchase/warranty dates. Administrators can configure the account password minimum under Users and access.
+
+Configuration details and notes are unified across templates and integrations. Column settings open from the gear at the table’s top right. Existing legacy values and integration source data are retained internally.
+
+The GitHub checkout now uses the same folder layout as the installed website. See [Git workflow](docs/git-workflow.md) for committing from the dev site without source bundles. Tests and packaging scripts remain separate and are excluded from release ZIPs.

@@ -1,4 +1,4 @@
-/vendor/
+/app/vendor/
 /config/local.php
 /var/*
 !/var/.gitkeep
@@ -8,4 +8,17 @@
 /node_modules/
 /browser-screenshots/
 
-/data/
+/data/*
+!/data/index.php
+!/data/.htaccess
+
+*.sql
+*.sql.gz
+*.bundle
+*.zip
+.env
+.env.*
+*.log
+*.log.php
+*.pem
+*.key

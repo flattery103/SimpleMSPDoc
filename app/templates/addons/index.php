@@ -1,0 +1,1 @@
+<section class="card"><div class="card-heading"><h2>Action1</h2><span class="badge"><?= $action1['enabled']?'Enabled':'Disabled' ?></span></div><p>Import managed devices into organization configurations. One-way sync preserves manually entered documentation.</p><a class="button" href="<?= $link('/addons/action1') ?>">Configure Action1</a></section>

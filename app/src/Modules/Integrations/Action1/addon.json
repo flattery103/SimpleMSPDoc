@@ -1,0 +1,8 @@
+{
+  "id": "action1",
+  "name": "Action1",
+  "version": "1.0.0-alpha.3",
+  "minimum_app_version": "2.0.0-alpha.7",
+  "default_enabled": false,
+  "capabilities": ["read_organizations", "read_endpoints", "import_configurations"]
+}

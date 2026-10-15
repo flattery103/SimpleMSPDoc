@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace SimpleMSPDoc\Tests\Integration;
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
+
 use SimpleMSPDoc\Core\{Actor,HttpException};
 use SimpleMSPDoc\Modules\Audit\AuditService;
 use SimpleMSPDoc\Modules\Organizations\OrganizationService;
