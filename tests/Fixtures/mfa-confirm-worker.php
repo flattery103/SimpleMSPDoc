@@ -1,5 +1,7 @@
 <?php
-require dirname(__DIR__,2).'/vendor/autoload.php';
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
+
+require dirname(__DIR__,2).'/app/vendor/autoload.php';
 use SimpleMSPDoc\Core\Database;
 use SimpleMSPDoc\Modules\Audit\AuditService;
 use SimpleMSPDoc\Modules\Auth\MfaService;

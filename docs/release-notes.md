@@ -1,13 +1,15 @@
-# 2.0.0-alpha.4
+# 2.0.0-alpha.7
 
-- Organization navigation remains visible on overview, configuration, contact, document, location and password pages.
-- Organization profiles support logos (PNG/JPEG/WebP up to 1 MiB), website, phone, address and notes. Logos require authenticated organization access.
-- Organization passwords can stand alone or link to a configuration in that organization. Password values are encrypted with AES-256-GCM using a key derived from the application key.
-- Passwords default to internal-only. Existing roles, organization assignments and explicit client visibility control access. Linked configurations must also be readable. Authorized users reveal passwords with a click; reveal, creation, update and archive events are audited without password contents. There is no additional vault login.
-- Password secrets are excluded from documentation search and revisions, and are not prefilled in edit forms. Leave the replacement password empty to preserve the existing value.
-- Fixed the asset-template page crash caused by a renderer variable-name collision.
-- Installed alpha.2/alpha.3 systems can apply the additive database update while preserving data. See upgrading.md.
+Cumulative package: includes all changes since alpha.4, including the unpublished Action1 add-on, password policy and inventory improvements. You can upgrade directly without installing intermediate releases.
 
-The flat website-root layout and direct browser installer remain. No setup key, ownership verification, command-line access or Apache rewrite rules are required.
+- Consolidates matching standard, template and integration fields into one editable field and one table column. Existing template values remain stored internally. Serial number, manufacturer, model, system specifications and other common fields no longer appear twice.
+- One shared source-data model supports multiple integrations. Explicit manual edits have highest priority, followed by older manual template data, then integration data. Conflicting integrations use a stable provider-key order, so sync timing cannot change the chosen value. All source values are retained internally.
+- Saving an unchanged imported value keeps it eligible for future refreshes. Editing or clearing it creates a manual override. Required fields and legacy choice/number constraints remain validated.
+- Action1 notes merge into regular Notes. Identical note blocks are shown once. Retained source blocks refresh on sync; manual additions survive. If you edit or remove an imported block, that source is suppressed so it cannot overwrite your change or reappear during the next sync.
+- Replaces the separate column-settings card with a gear at the configuration table's top right. Clicking it opens column choices. Saved selections for old duplicate columns resolve to the shared column.
+- Less-used agent metadata is collapsed in the editor. Empty shared fields are omitted from the read view. Genuine custom fields remain available.
+- Search uses the merged visible data rather than hidden duplicate values.
 
-This is an alpha release. Local validation uses PHP 8.3 and MariaDB 10.11. Wider CI and actual Apache/browser validation remain pending.
+No additional database migration is required from alpha.6. Older rebuilds still receive migrations 003 and 004 through browser Database upgrades. Preserve data/config.php and the entire data folder. No records, source values, credentials or application keys are deleted.
+
+Legacy SimpleMSPDoc and the alpha.1 folder layout remain incompatible and require fresh installation. This remains an alpha build; live Action1 verification on the dev site is still required.

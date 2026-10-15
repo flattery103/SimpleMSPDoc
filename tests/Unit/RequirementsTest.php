@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace SimpleMSPDoc\Tests\Unit;
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
+
 use PHPUnit\Framework\TestCase;
 use SimpleMSPDoc\Modules\Installation\Requirements;
 final class RequirementsTest extends TestCase

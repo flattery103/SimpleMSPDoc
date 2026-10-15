@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 namespace SimpleMSPDoc\Tests\Integration;
+if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
+
 use PHPUnit\Framework\TestCase;
 use SimpleMSPDoc\Core\Database;
 abstract class DatabaseTestCase extends TestCase
@@ -19,7 +21,7 @@ abstract class DatabaseTestCase extends TestCase
   $this->root=sys_get_temp_dir().'/mspdoc-test-'.bin2hex(random_bytes(8));mkdir($this->root.'/data',0700,true);
  }
  protected function tearDown(): void { if(isset($this->databaseName)){$this->db->run('DROP DATABASE `'.$this->databaseName.'`');putenv('TEST_DSN='.$this->originalDsn);} if(isset($this->root)){ $it=new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($this->root,\FilesystemIterator::SKIP_DOTS),\RecursiveIteratorIterator::CHILD_FIRST);foreach($it as $p){($p->isDir()&&!$p->isLink())?rmdir($p->getPathname()):unlink($p->getPathname());}rmdir($this->root); } }
- protected function schema(): void { foreach(require dirname(__DIR__,2).'/database/migrations/001_initial.php' as $sql)$this->db->run($sql);$m=require dirname(__DIR__,2).'/database/migrations/002_organization_passwords.php';foreach($m['sql'] as $sql)$this->db->run($sql);$this->db->run("INSERT INTO migrations(version) VALUES ('002_organization_passwords')"); }
+ protected function schema(): void { foreach(require dirname(__DIR__,2).'/app/database/migrations/001_initial.php' as $sql)$this->db->run($sql);foreach(glob(dirname(__DIR__,2).'/app/database/migrations/*.php') as $file){$v=basename($file,'.php');if($v==='001_initial')continue;$m=require $file;foreach($m['sql'] as $sql)$this->db->run($sql);$this->db->run('INSERT INTO migrations(version) VALUES (?)',[$v]);} }
  protected function user(string $role='administrator',string $audience='staff'): int { $this->db->run('INSERT INTO users (username,name,password_hash,role,audience) VALUES (?,?,?,?,?)',[uniqid('user'), 'Test User',password_hash('Correct-password-123',PASSWORD_DEFAULT),$role,$audience]);return (int)$this->db->connection()->lastInsertId(); }
  protected function org(string $name='Example'): int { $this->db->run('INSERT INTO organizations(name) VALUES (?)',[$name]);return (int)$this->db->connection()->lastInsertId(); }
 }
